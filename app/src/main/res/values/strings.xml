@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MovieList</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="loginData">Login as User or just continue as guest</string>
+    <string name="as_guest">CONTINUE AS GUEST</string>
+    <string name="sign_in">Sign In</string>
+    <string name="logo">Logo</string>
+</resources>
