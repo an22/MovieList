@@ -1,7 +1,7 @@
 package com.movielist.model.network.requests;
 
-import com.movielist.model.entity.auth.RequestToken;
 import com.movielist.model.entity.Redirect;
+import com.movielist.model.entity.auth.RequestToken;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

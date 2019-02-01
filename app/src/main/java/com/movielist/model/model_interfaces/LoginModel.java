@@ -8,6 +8,9 @@ public interface LoginModel {
     void setAccessToken(AccessToken accessToken);
     AccessToken getAccessToken();
     RequestToken getRequestToken();
+    boolean saveDataToDb(String column,String data);
+    boolean loadRequestTokenFromDb();
+
 
 
 }

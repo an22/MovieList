@@ -9,7 +9,6 @@ import android.os.Handler;
 import com.movielist.R;
 import com.movielist.database.KeyContract.KeyColumns;
 import com.movielist.database.KeyDbHelper;
-import com.movielist.presenter.activity_presenters.LoginPresenter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -61,9 +60,9 @@ public class LogoActivity extends AppCompatActivity {
                 Cursor cursor = db.rawQuery("SELECT * FROM "
                         + KeyColumns.TABLE_NAME + " WHERE "
                         + KeyColumns.COLUMN_NAME_TITLE + "="
-                        + "\"" + LoginPresenter.SESSION + "\"" + "OR "
+                        + "\"" + KeyDbHelper.SESSION + "\"" + "OR "
                         + KeyColumns.COLUMN_NAME_TITLE + "="
-                        + "\"" + LoginPresenter.GUEST_SESSION + "\"", null);
+                        + "\"" + KeyDbHelper.GUEST_SESSION + "\"", null);
                 cursor.moveToNext();
                 int id = cursor.getColumnIndexOrThrow(KeyColumns.COLUMN_NAME_SUBTITLE);
                 int typeId = cursor.getColumnIndexOrThrow(KeyColumns.COLUMN_NAME_TITLE);

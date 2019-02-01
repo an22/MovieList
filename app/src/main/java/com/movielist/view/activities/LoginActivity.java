@@ -35,21 +35,23 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     @BindView(R.id.error)
     TextView error;
 
-    private boolean clicked = false;
-    private boolean loaded = false;
+    private boolean clicked;
+    private boolean loaded;
     private LoginPresenter mPresenter;
     private CustomTabsServiceConnection mConnection;
 
-    public static final String CUSTOM_TAB_PACKAGE_NAME = "com.android.chrome";  // Change when in stable
+    public static final String CUSTOM_TAB_PACKAGE_NAME = "com.android.chrome";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        LoginData loginData = new LoginData();
         KeyDbHelper dbHelper = new KeyDbHelper(this);
-        mPresenter = new LoginPresenter(this, loginData,dbHelper);
+        LoginData loginData = new LoginData(dbHelper);
+        mPresenter = new LoginPresenter(this, loginData);
+        clicked = false;
+        loaded = false;
 
     }
 

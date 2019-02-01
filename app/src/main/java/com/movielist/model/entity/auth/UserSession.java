@@ -2,7 +2,7 @@ package com.movielist.model.entity.auth;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Session {
+public class UserSession {
 
     @SerializedName("success")
     private boolean success;

@@ -3,21 +3,22 @@ package com.movielist.model;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RetrofitSingletone {
+public class RetrofitSingleton {
+
     private Retrofit sRetrofit;
 
     private static class SingletonHolder{
-        static final RetrofitSingletone INSTANCE = new RetrofitSingletone();
+        static final RetrofitSingleton INSTANCE = new RetrofitSingleton();
     }
 
-    private RetrofitSingletone(){
+    private RetrofitSingleton(){
         sRetrofit = new Retrofit.Builder()
                 .baseUrl(TmdbConstants.baseURL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
 
-    public static RetrofitSingletone getInstance() {
+    public static RetrofitSingleton getInstance() {
         return SingletonHolder.INSTANCE;
     }
 

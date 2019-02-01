@@ -2,7 +2,7 @@ package com.movielist.view.activities;
 
 import android.os.Bundle;
 
-import com.movielist.presenter.activity_presenters.LoginPresenter;
+import com.movielist.database.KeyDbHelper;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +15,7 @@ public class CatalogActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if(savedInstanceState != null){
-            System.out.println(savedInstanceState.getString(LoginPresenter.GUEST_SESSION));
+            System.out.println(savedInstanceState.getString(KeyDbHelper.GUEST_SESSION));
         }
     }
 }
