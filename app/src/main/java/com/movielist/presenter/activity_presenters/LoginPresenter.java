@@ -1,9 +1,9 @@
 package com.movielist.presenter.activity_presenters;
 
 import com.movielist.database.KeyDbHelper;
-import com.movielist.model.RetrofitSingleton;
+import com.movielist.model.network.RetrofitSingleton;
 import com.movielist.model.TmdbConstants;
-import com.movielist.model.entity.Redirect;
+import com.movielist.model.entity.auth.Redirect;
 import com.movielist.model.entity.auth.AccessToken;
 import com.movielist.model.entity.auth.GuestSession;
 import com.movielist.model.entity.auth.LoginData;
@@ -66,7 +66,7 @@ public class LoginPresenter {
             public void onResponse(@NonNull Call<GuestSession> call,@NonNull Response<GuestSession> response) {
 
                 GuestSession guestSession = response.body();
-
+                System.out.println(response.toString());
                 if(guestSession != null){
 
                     if(loginModel.saveDataToDb(KeyDbHelper.GUEST_SESSION,guestSession.getSessionId())){
@@ -100,7 +100,7 @@ public class LoginPresenter {
                 @Override
                 public void onResponse(@NonNull Call<AccessToken> call, @NonNull Response<AccessToken> response) {
                     loginModel.setAccessToken(response.body());
-
+                    System.out.println(response.toString());
                     if (loginModel.getAccessToken() != null) {
 
                         getSession();
@@ -127,6 +127,7 @@ public class LoginPresenter {
             @Override
             public void onResponse(@NonNull Call<UserSession> call, @NonNull Response<UserSession> response) {
                 UserSession session = response.body();
+                System.out.println(response.toString());
                 if(session != null){
                     loginModel.saveDataToDb(KeyDbHelper.SESSION,session.getId());
                     loginActivity.launchNext(session.getId(),KeyDbHelper.SESSION);

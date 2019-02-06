@@ -1,4 +1,4 @@
-package com.movielist.model.entity;
+package com.movielist.model.entity.auth;
 
 import com.google.gson.annotations.SerializedName;
 

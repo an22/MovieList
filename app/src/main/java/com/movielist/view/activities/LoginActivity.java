@@ -3,7 +3,6 @@ package com.movielist.view.activities;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.browser.customtabs.CustomTabsClient;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.browser.customtabs.CustomTabsServiceConnection;
+import androidx.core.content.ContextCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -125,11 +125,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     @Override
     public void checkToken(String url) {
         CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            builder.setToolbarColor(getColor(R.color.colorPrimary));
-        }else {
-            builder.setToolbarColor(getResources().getColor(R.color.colorPrimary));
-        }
+        builder.setToolbarColor(ContextCompat.getColor(this,R.color.colorPrimary));
         CustomTabsIntent intent = builder.build();
         intent.launchUrl(this, Uri.parse(url));
         clicked = false;

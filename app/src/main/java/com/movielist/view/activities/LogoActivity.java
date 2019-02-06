@@ -25,7 +25,6 @@ public class LogoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logo);
         Handler mHandler = new Handler();
-        this.deleteDatabase(KeyDbHelper.DATABASE_NAME);
         keyHelper = new KeyDbHelper(this);
 
         //New thread declaration which will start new activity

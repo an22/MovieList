@@ -7,4 +7,11 @@
     <string name="as_guest">CONTINUE AS GUEST</string>
     <string name="sign_in">Sign In</string>
     <string name="logo">Logo</string>
+    <string name="home">Home</string>
+    <string name="catalog">Catalog</string>
+    <string name="search">Search</string>
+    <string name="profile">Profile</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="popular">Popular</string>
+    <string name="top_rated">Top rated</string>
 </resources>

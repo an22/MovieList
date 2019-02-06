@@ -1,4 +1,6 @@
-package com.movielist.model;
+package com.movielist.model.network;
+
+import com.movielist.model.TmdbConstants;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
