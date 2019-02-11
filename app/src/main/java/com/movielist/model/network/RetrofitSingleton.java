@@ -9,6 +9,7 @@ public class RetrofitSingleton {
 
     private Retrofit sRetrofit;
 
+
     private static class SingletonHolder{
         static final RetrofitSingleton INSTANCE = new RetrofitSingleton();
     }

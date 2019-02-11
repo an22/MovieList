@@ -10,6 +10,8 @@ public class User implements Serializable {
 
     public static final String USER = "USER";
 
+    private boolean isGuest;
+
     @SerializedName("avatar")
     private Avatar avatar;
 
@@ -31,8 +33,33 @@ public class User implements Serializable {
     @SerializedName("include_adult")
     private boolean adult;
 
+
+    public User(){
+        language = "en";
+        country = "US";
+        name = "Guest";
+        adult = false;
+        isGuest = true;
+    }
+
     //-----------------------------------Getter-----------------------------------------------
 
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public boolean isGuest() {
+        return isGuest;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getAvatar() {
         return avatar.getGravatar();

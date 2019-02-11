@@ -35,21 +35,29 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     @BindView(R.id.error)
     TextView error;
 
+    //Check for multiple clicking
     private boolean clicked;
     private boolean loaded;
+
     private LoginPresenter mPresenter;
     private CustomTabsServiceConnection mConnection;
 
+    //Chrome package
     public static final String CUSTOM_TAB_PACKAGE_NAME = "com.android.chrome";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         ButterKnife.bind(this);
+
         KeyDbHelper dbHelper = new KeyDbHelper(this);
+
         LoginData loginData = new LoginData(dbHelper);
+
         mPresenter = new LoginPresenter(this, loginData);
+
         clicked = false;
         loaded = false;
 
@@ -58,11 +66,17 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     @Override
     protected void onStart() {
         super.onStart();
-        String action = getIntent().getAction();
+
+        String action = getIntent().getAction(); //Get action which launched activity
+
         if(Intent.ACTION_VIEW.equals(action)&& !loaded){
+
             mPresenter.getAccessToken();
             loaded = true;
         }else {
+
+            //Run Custom tabs service
+            //It helps to run browser faster in the future
             mConnection = new CustomTabsServiceConnection() {
                 @Override
                 public void onCustomTabsServiceConnected(ComponentName name, CustomTabsClient client) {
@@ -75,6 +89,8 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
                 }
             };
+
+            //Bind service to this activity
             CustomTabsClient.bindCustomTabsService(this, CUSTOM_TAB_PACKAGE_NAME, mConnection);
         }
     }
@@ -83,32 +99,46 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     @Override
     protected void onPause() {
         super.onPause();
+
+        //Unbinding service when activity is in Paused state
         if(mConnection != null) {
             unbindService(mConnection);
         }
     }
 
+
     @Override
     @OnClick(R.id.signin)
     public void onLogin() {
+
         if (!clicked) {
             mPresenter.getRequestToken();
             clicked = true;
         }
+
     }
 
     @Override
     @OnClick(R.id.guest)
     public void onGuest() {
-        mPresenter.getGuestSession();
+        if (!clicked) {
+            mPresenter.getGuestSession();
+            clicked = true;
+        }
     }
 
     @Override
     public void onError(String text) {
+
         error.setText(text);
-        error.setVisibility(View.VISIBLE);
+        error.setVisibility(View.VISIBLE);//Show error message
+
+        clicked = false;
+        loaded = false;
     }
 
+
+    //Launching next activity
     @Override
     public void launchNext(String data, String type){
 
@@ -124,6 +154,9 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     @Override
     public void checkToken(String url) {
+
+        //Run browser and
+        //Let user to confirm token
         CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
         builder.setToolbarColor(ContextCompat.getColor(this,R.color.colorPrimary));
         CustomTabsIntent intent = builder.build();

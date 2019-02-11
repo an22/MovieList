@@ -14,4 +14,6 @@
     <string name="upcoming">Upcoming</string>
     <string name="popular">Popular</string>
     <string name="top_rated">Top rated</string>
+    <string name="error_image">Error image</string>
+    <string name="poster">Poster</string>
 </resources>

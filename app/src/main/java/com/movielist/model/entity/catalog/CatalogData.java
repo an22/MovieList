@@ -1,11 +1,21 @@
 package com.movielist.model.entity.catalog;
 
-import com.movielist.model.model_interfaces.CatalogModel;
-import com.movielist.model.network.callbacks.GetUserAsync;
+import android.util.Log;
 
-import java.util.concurrent.ExecutionException;
+import com.movielist.model.TmdbConstants;
+import com.movielist.model.model_interfaces.CatalogModel;
+import com.movielist.model.network.RetrofitSingleton;
+import com.movielist.model.network.requests.GetUserDetails;
+import com.movielist.presenter.model_listeners.NetworkListener;
+
+import androidx.annotation.NonNull;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CatalogData implements CatalogModel {
+
+    private static final String TAG = "USER";
 
     private User user;
 
@@ -20,21 +30,28 @@ public class CatalogData implements CatalogModel {
     }
 
     @Override
-    public boolean loadUser(String session) {
+    public void loadUser(String session, NetworkListener listener) {
 
-        try {
-            user = new GetUserAsync().execute(session).get();
-            if(user != null){
-                System.out.println(user.toString());
-                return true;
-            }else return false;
-        } catch (ExecutionException e) {
+        GetUserDetails userDetails = RetrofitSingleton.getInstance().getRetrofit().create(GetUserDetails.class);
+        userDetails.getUser(TmdbConstants.keyV3,session).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(@NonNull Call<User> call,@NonNull Response<User> response) {
+                User user = response.body();
+                if(user != null) {
+                    Log.v(TAG, user.toString());
+                    CatalogData.this.user = user;
+                    listener.onLoaded();
+                }
+                else if(response.code() == 401){
+                    listener.onGuest();
+                }
+            }
 
-            e.printStackTrace();
-            return false;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return false;
-        }
+            @Override
+            public void onFailure(@NonNull Call<User> call,@NonNull Throwable t) {
+                listener.onError(t.toString());
+            }
+        });
+
     }
 }

@@ -7,7 +7,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.movielist.R;
-import com.movielist.model.entity.catalog.User;
+import com.movielist.model.entity.Configuration;
+import com.movielist.model.entity.catalog.DownloadTypes;
+import com.movielist.model.entity.catalog.MovieResult;
+import com.movielist.presenter.model_listeners.ErrorListener;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,17 +20,27 @@ import butterknife.ButterKnife;
 
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeHolder> {
 
-    private final String[] types = {"Upcoming","Top rated","Popular"};
+    private final DownloadTypes[] mTypes = DownloadTypes.values();
+
+    private final String[] keys = {"Upcoming","Top rated","Popular"};
 
     private Context mContext;
-    private User mUser;
+
+    private Configuration mConfiguration;
+
+    private String language;
+    private String country;
+
+    private ErrorListener mListener;
 
 
-    public HomeAdapter(Context context, User user) {
+    public HomeAdapter(Context context, ErrorListener errorListener, String language, String country,Configuration configuration) {
         mContext = context;
-        mUser = user;
+        mListener = errorListener;
+        this.language = language;
+        this.country = country;
+        this.mConfiguration = configuration;
     }
-
 
     @NonNull
     @Override
@@ -55,24 +68,46 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeHolder> {
         @BindView(R.id.header)
         TextView header;
 
+        private MovieResult result;
+
         private InnerHomeAdapter adapter;
+
 
         HomeHolder(@NonNull View itemView) {
             super(itemView);
+
             ButterKnife.bind(this,itemView);
 
 
             LinearLayoutManager manager = new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false);
+
+            result = new MovieResult(language,country);
+            adapter = new InnerHomeAdapter(mContext,result,mListener);
             mRecyclerView.setLayoutManager(manager);
-            adapter = new InnerHomeAdapter(mUser,mContext);
             mRecyclerView.setAdapter(adapter);
             mRecyclerView.setHasFixedSize(true);
+            mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+
+                    int itemCount = manager.getItemCount();
+                    int lastVisibleItem = manager.findLastVisibleItemPosition();
+
+                    if(itemCount - lastVisibleItem <= 3) {
+                        result.loadMore();
+                    }
+                }
+            });
         }
 
         void bind(int pos){
-            header.setText(types[pos]);
-            adapter.setPosition(pos);
+            header.setText(keys[pos]);
+            result.setType(mTypes[pos]);
+            result.loadMore();
+            adapter.setConfiguration(mConfiguration);
         }
+
 
     }
 }

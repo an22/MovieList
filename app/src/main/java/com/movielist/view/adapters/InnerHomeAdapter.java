@@ -4,85 +4,52 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.movielist.R;
-import com.movielist.model.TmdbConstants;
 import com.movielist.model.entity.Configuration;
 import com.movielist.model.entity.catalog.MovieResult;
-import com.movielist.model.entity.catalog.User;
-import com.movielist.model.network.RetrofitSingleton;
-import com.movielist.model.network.requests.GetImageCfg;
-
-import java.util.Observable;
-import java.util.Observer;
+import com.movielist.presenter.model_listeners.ErrorListener;
+import com.movielist.presenter.model_listeners.UINetworkListener;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import butterknife.OnClick;
 
-public class InnerHomeAdapter extends RecyclerView.Adapter<InnerHomeAdapter.InnerViewHolder> implements Observer {
+public class InnerHomeAdapter extends RecyclerView.Adapter<InnerHomeAdapter.InnerViewHolder> {
 
     private MovieResult movies;
-    private User user;
-    private int page;
     private Configuration mConfiguration;
-    private boolean allow = false;
     private Context mContext;
 
-    InnerHomeAdapter(User user, Context context) {
-        this.movies = new MovieResult();
-        this.movies.addObserver(this);
-        this.mContext = context;
-        this.user = user;
-        this.page = 1;
-        loadConfig();
-    }
 
-    void setPosition(int pos){
-        switch (pos){
-            case 0:{
-                movies.loadUpcoming(user,page);
-                break;
-            }
-            case 1:{
-                movies.loadPopular(user,page);
-                break;
-            }
-            case 2:{
-                movies.loadTopRated(user,page);
-                break;
-            }
-        }
-    }
-
-
-    private void loadConfig(){
-        GetImageCfg cfg = RetrofitSingleton.getInstance().getRetrofit().create(GetImageCfg.class);
-        cfg.getCfg(TmdbConstants.keyV3).enqueue(new Callback<Configuration>() {
+    public InnerHomeAdapter(Context context, MovieResult movies, ErrorListener errorListener) {
+        this.movies = movies;
+        movies.setListener(new UINetworkListener() {
             @Override
-            public void onResponse(Call<Configuration> call, Response<Configuration> response) {
-                Configuration config = response.body();
-                System.out.println(response.toString());
-                if(config != null){
-                    mConfiguration = config;
-                    allow = true;
-                    notifyDataSetChanged();
-                }
+            public void onLoaded() {
+                notifyDataSetChanged();
             }
 
             @Override
-            public void onFailure(Call<Configuration> call, Throwable t) {
-                System.out.println(t.toString());
+            public void onError(String error) {
+                errorListener.onError(error);
             }
         });
+        this.mContext = context;
     }
+
+    public void setConfiguration(Configuration configuration) {
+        mConfiguration = configuration;
+    }
+
+
     @NonNull
     @Override
     public InnerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -101,10 +68,6 @@ public class InnerHomeAdapter extends RecyclerView.Adapter<InnerHomeAdapter.Inne
         return movies.getShorts().size();
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        notifyDataSetChanged();
-    }
 
     class InnerViewHolder extends RecyclerView.ViewHolder {
 
@@ -121,9 +84,14 @@ public class InnerHomeAdapter extends RecyclerView.Adapter<InnerHomeAdapter.Inne
 
         void bind(int pos){
             title.setText(movies.getShorts().get(pos).getTitle());
-            if(allow){
-                Glide.with(mContext).load(mConfiguration.getImageConfig().getSecureBaseUrl() + mConfiguration.getImageConfig().getPosterSizes()[3] + movies.getShorts().get(pos).getPosterPath()).into(poster);
-            }
+            Glide.with(mContext).load(mConfiguration.getImageConfig().getSecureBaseUrl() + mConfiguration.getImageConfig().getPosterSizes()[3] + movies.getShorts().get(pos).getPosterPath()).into(poster);
+
+        }
+
+        @OnClick(R.id.poster)
+        void onPosterTouch(){
+                Animation anim = AnimationUtils.loadAnimation(mContext, R.anim.poster_scaling);
+                poster.startAnimation(anim);
         }
     }
 }

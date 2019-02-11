@@ -1,18 +1,20 @@
 package com.movielist.view.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.movielist.R;
-import com.movielist.model.entity.catalog.MovieResult;
+import com.movielist.model.Error;
+import com.movielist.model.entity.Configuration;
 import com.movielist.model.entity.catalog.User;
+import com.movielist.presenter.model_listeners.ErrorListener;
 import com.movielist.view.adapters.HomeAdapter;
-import com.movielist.view.view_interfaces.HomeView;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,10 +25,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class HomeFragment extends Fragment implements HomeView {
+public class HomeFragment extends Fragment {
+
+    private final String TAG = "HOME_FRAGMENT";
 
     @BindView(R.id.home_rv)
     RecyclerView mRecyclerView;
+
+    @BindView(R.id.error_home)
+    TextView errorTv;
 
     private Unbinder mUnbinder;
 
@@ -40,27 +47,42 @@ public class HomeFragment extends Fragment implements HomeView {
 
         if(getArguments() != null) {
 
-            Serializable user = getArguments().getSerializable(User.USER);
+            ErrorListener errorListener = error -> {
+                mRecyclerView.setVisibility(View.GONE);
+                errorTv.setVisibility(View.VISIBLE);
+                errorTv.setText(error);
+                Log.e(TAG,error);
+            };
 
+            Serializable serializableUser = getArguments().getSerializable(User.USER);
+            HomeAdapter adapter;
 
+            User user = (User)serializableUser;
 
-            LinearLayoutManager manager = new LinearLayoutManager(getContext());
-            mRecyclerView.setLayoutManager(manager);
+            if(user != null) {
 
-            HomeAdapter adapter = new HomeAdapter(getContext(), (User) user);
-            mRecyclerView.setAdapter(adapter);
-            mRecyclerView.setHasFixedSize(true);
+                adapter = new HomeAdapter(
+                        getContext(),
+                        errorListener,
+                        user.getLanguage(),
+                        user.getCountry(),
+                        (Configuration)getArguments().getSerializable(Configuration.TAG));
 
+                LinearLayoutManager manager = new LinearLayoutManager(getContext());
+                mRecyclerView.setLayoutManager(manager);
+                mRecyclerView.setAdapter(adapter);
+                mRecyclerView.setHasFixedSize(true);
+
+            }
+            else {
+                errorListener.onError(Error.USER_ERROR);
+            }
 
         }
 
         return view;
     }
 
-    @Override
-    public void setUpRecyclerView(ArrayList<MovieResult> results){
-
-    }
 
     @Override
     public void onDestroyView() {

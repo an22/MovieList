@@ -1,21 +1,21 @@
 package com.movielist.model.entity.catalog;
 
+import android.util.Log;
+
 import com.google.gson.annotations.SerializedName;
 import com.movielist.model.TmdbConstants;
 import com.movielist.model.network.RetrofitSingleton;
-import com.movielist.model.network.requests.GetPopular;
-import com.movielist.model.network.requests.GetTopRated;
-import com.movielist.model.network.requests.GetUpcoming;
+import com.movielist.model.network.requests.Movies;
+import com.movielist.presenter.model_listeners.UINetworkListener;
 
 import java.util.ArrayList;
-import java.util.Observable;
 
 import androidx.annotation.NonNull;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MovieResult extends Observable {
+public class MovieResult {
 
     @SerializedName("page")
     private int currentPage;
@@ -26,68 +26,152 @@ public class MovieResult extends Observable {
     @SerializedName("total_pages")
     private int pages;
 
+    private DownloadTypes type;
+
+    private boolean loading = false;
+
+    private String currentQuery;
+
+    private Movies movieRequests;
+
+    private String language;
+
+    private String region;
+
+    private UINetworkListener mListener;
+
+    private static String TAG = "Network";
 
 
-    public void loadUpcoming(User user,int page) {
-        GetUpcoming upcomingReq = RetrofitSingleton.getInstance().getRetrofit().create(GetUpcoming.class);
-        upcomingReq.get(TmdbConstants.keyV3, user.getLanguage() + "-" + user.getCountry(), page).enqueue(new Callback<MovieResult>() {
+    public MovieResult(String language,String region) {
+        mShorts = new ArrayList<>();
+        movieRequests = RetrofitSingleton.getInstance().getRetrofit().create(Movies.class);
+        pages = 1;
+        currentPage = 0;
+        this.language = language;
+        this.region = region;
+    }
+
+    public void setListener(UINetworkListener listener) {
+        mListener = listener;
+    }
+
+    public void setType(DownloadTypes type) {
+        this.type = type;
+    }
+
+    public void loadMore(){
+        if(!loading&& currentPage < pages) {
+            switch (type) {
+                case UPCOMING: {
+                    loading = true;
+                    loadUpcoming();
+                    break;
+                }
+                case TOP_RATED: {
+                    loading = true;
+                    loadTopRated();
+                    break;
+                }
+                case POPULAR: {
+                    loading = true;
+                    loadPopular();
+                    break;
+                }
+                case QUERY:{
+                    loading = true;
+                    loadFromQuery(currentQuery);
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+
+    }
+
+    private void loadTopRated() {
+        movieRequests.getTopRated(TmdbConstants.keyV3, language,region, ++currentPage).enqueue(new Callback<MovieResult>() {
             @Override
-            public void onResponse(@NonNull Call<MovieResult> call, @NonNull Response<MovieResult> response) {
+            public void onResponse(@NonNull Call<MovieResult> call,@NonNull Response<MovieResult> response) {
                 MovieResult movieResult = response.body();
-                System.out.println(response.toString());
+                Log.i(TAG,response.toString());
                 if (movieResult != null) {
                     add(movieResult);
-                    setChanged();
-                    notifyObservers();
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<MovieResult> call, @NonNull Throwable t) {
-                System.out.println(t.toString());
-            }
-        });
-    }
-
-    public void loadTopRated(User user,int page) {
-        GetTopRated topRatedReq = RetrofitSingleton.getInstance().getRetrofit().create(GetTopRated.class);
-        topRatedReq.get(TmdbConstants.keyV3,user.getLanguage() + "-" + user.getCountry(),page).enqueue(new Callback<MovieResult>() {
-            @Override
-            public void onResponse(@NonNull Call<MovieResult> call,@NonNull Response<MovieResult> response) {
-                MovieResult movieResult = response.body();
-                System.out.println(response.toString());
-                if(movieResult != null){
-                    add(movieResult);
-                    setChanged();
-                    notifyObservers();
+                    loading = false;
+                    mListener.onLoaded();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<MovieResult> call,@NonNull Throwable t) {
-                System.out.println(t.toString());
+                mListener.onError(t.toString());
+                Log.e(TAG,t.toString());
             }
         });
-
     }
 
-    public void loadPopular(User user,int page) {
-        GetPopular popularReq = RetrofitSingleton.getInstance().getRetrofit().create(GetPopular.class);
-        popularReq.get(TmdbConstants.keyV3,user.getLanguage() + "-" + user.getCountry(),page).enqueue(new Callback<MovieResult>() {
+    private void loadPopular() {
+        movieRequests.getPopular(TmdbConstants.keyV3, language,region, ++currentPage).enqueue(new Callback<MovieResult>() {
             @Override
             public void onResponse(@NonNull Call<MovieResult> call,@NonNull Response<MovieResult> response) {
                 MovieResult movieResult = response.body();
-                System.out.println(response.toString());
-                if(movieResult != null){
+                Log.i(TAG,response.toString());
+                if (movieResult != null) {
                     add(movieResult);
-                    setChanged();
-                    notifyObservers();
+                    loading = false;
+                    mListener.onLoaded();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<MovieResult> call,@NonNull Throwable t) {
-                System.out.println(t.toString());
+                mListener.onError(t.toString());
+                Log.e(TAG,t.toString());
+            }
+        });
+    }
+
+    private void loadUpcoming() {
+        movieRequests.getUpcoming(TmdbConstants.keyV3, language,region, ++currentPage).enqueue(new Callback<MovieResult>() {
+            @Override
+            public void onResponse(@NonNull Call<MovieResult> call,@NonNull Response<MovieResult> response) {
+                MovieResult movieResult = response.body();
+                Log.i(TAG,response.toString());
+                if (movieResult != null) {
+                    add(movieResult);
+                    loading = false;
+                    mListener.onLoaded();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MovieResult> call,@NonNull Throwable t) {
+                mListener.onError(t.toString());
+                Log.e(TAG,t.toString());
+            }
+        });
+    }
+
+    public void loadFromQuery(String query){
+        currentQuery = query;
+        loading = true;
+        movieRequests.search(TmdbConstants.keyV3,language,region,query,++currentPage).enqueue(new Callback<MovieResult>() {
+            @Override
+            public void onResponse(@NonNull Call<MovieResult> call,@NonNull Response<MovieResult> response) {
+                MovieResult movieResult = response.body();
+                Log.i(TAG,response.toString());
+                if (movieResult != null) {
+                    add(movieResult);
+                    loading = false;
+                    mListener.onLoaded();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MovieResult> call,@NonNull Throwable t) {
+                mListener.onError(t.toString());
+                Log.e(TAG,t.toString());
             }
         });
     }
@@ -95,15 +179,16 @@ public class MovieResult extends Observable {
     private void add(MovieResult result){
         mShorts.addAll(result.getShorts());
         pages = result.getPages();
-        currentPage = result.getPage();
     }
 
-    public MovieResult() {
-        mShorts = new ArrayList<>();
+    private void replace(MovieResult result){
+        mShorts.clear();
+        mShorts.addAll(result.getShorts());
+        pages = result.getPages();
     }
 
-    public int getPage() {
-        return currentPage;
+    public void setQuery(String query) {
+        this.currentQuery = query;
     }
 
     public ArrayList<MovieShort> getShorts() {

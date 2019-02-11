@@ -2,7 +2,11 @@ package com.movielist.model.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Configuration {
+import java.io.Serializable;
+
+public class Configuration implements Serializable {
+
+    public static String TAG = "Configuration";
 
     @SerializedName("images")
     private ImageConfiguration imageConfig;
