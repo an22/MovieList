@@ -47,12 +47,10 @@
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
-        android:background="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-    <include android:id="@+id/error_search" layout="@layout/error_layout"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

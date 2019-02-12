@@ -16,6 +16,7 @@ import com.movielist.model.entity.catalog.DownloadTypes;
 import com.movielist.model.entity.catalog.MovieResult;
 import com.movielist.presenter.model_listeners.ErrorListener;
 import com.movielist.presenter.model_listeners.Reciever;
+import com.movielist.view.LoadMoreListener;
 import com.movielist.view.activities.CatalogActivity;
 import com.movielist.view.adapters.InnerHomeAdapter;
 
@@ -26,6 +27,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public class MovieFragment extends Fragment implements Reciever {
 
@@ -35,26 +37,28 @@ public class MovieFragment extends Fragment implements Reciever {
 
     private final int spanCount = 2;
 
-    private ErrorListener listener;
-
     @BindView(R.id.error_result)
     TextView errorLayout;
 
     @BindView(R.id.rv_result)
     RecyclerView mRecyclerView;
 
+    private Unbinder mUnbinder;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_result,container,false);
-        ButterKnife.bind(this,view);
-        listener = error -> {
-            mRecyclerView.setVisibility(View.GONE);
-            errorLayout.setVisibility(View.VISIBLE);
-            errorLayout.setText(error);
-            Log.e(TAG,error);
+        mUnbinder = ButterKnife.bind(this,view);
+        ErrorListener listener = error -> {
+            if(errorLayout.getVisibility() == View.GONE) {
+                mRecyclerView.setVisibility(View.GONE);
+                errorLayout.setVisibility(View.VISIBLE);
+                errorLayout.setText(error);
+            }
+            Log.e(TAG, error);
+
         };
 
         if(getActivity() != null) {
@@ -68,6 +72,8 @@ public class MovieFragment extends Fragment implements Reciever {
                 adapter.setConfiguration((Configuration)getArguments().getSerializable(Configuration.TAG));
                 mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCount));
                 mRecyclerView.setAdapter(adapter);
+                mRecyclerView.setOnScrollListener(new LoadMoreListener(mResult,6));
+
             }else listener.onError(Error.BAD_ARGUMENTS);
         }
         else {
@@ -80,5 +86,11 @@ public class MovieFragment extends Fragment implements Reciever {
     @Override
     public void onRecieve(String data) {
         mResult.loadFromQuery(data);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mUnbinder.unbind();
     }
 }

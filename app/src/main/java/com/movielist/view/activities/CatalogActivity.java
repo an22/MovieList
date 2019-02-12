@@ -2,11 +2,14 @@ package com.movielist.view.activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.movielist.R;
 import com.movielist.database.KeyDbHelper;
+import com.movielist.model.Error;
 import com.movielist.model.entity.Configuration;
 import com.movielist.model.entity.catalog.CatalogData;
 import com.movielist.model.entity.catalog.User;
@@ -23,14 +26,17 @@ import butterknife.ButterKnife;
 
 public class CatalogActivity extends AppCompatActivity implements CatalogView {
 
+    private final String TAG = "CATALOG_ACTIVITY";
+
     private CatalogPresenter mPresenter;
-    private static final String USER_ERROR = "Cannot find user,try to restart";
     public static final String LANGUAGE = "language";
     public static final String COUNTRY = "country";
 
     @BindView(R.id.bottom_navigation)
     BottomNavigationView bottomNavigation;
 
+    @BindView(R.id.catalog_activity_error)
+    TextView errorLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,7 +57,7 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
             mPresenter.loadUser(session);
         }
         else {
-            onError(USER_ERROR);
+            onError(Error.USER_ERROR);
         }
 
         bottomNavigation.setOnNavigationItemSelectedListener(item -> {
@@ -111,6 +117,7 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
         args.putSerializable(User.USER, mPresenter.getUser());
         args.putSerializable(Configuration.TAG,configuration);
         fragment.setArguments(args);
+        errorLayout.setVisibility(View.GONE);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container,fragment)
@@ -126,6 +133,7 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
         args.putSerializable(User.USER, mPresenter.getUser());
         args.putSerializable(Configuration.TAG,configuration);
         fragment.setArguments(args);
+        errorLayout.setVisibility(View.GONE);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container,fragment)
@@ -144,7 +152,9 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
 
     @Override
     public void onError(String message) {
-        Toast.makeText(this,message, Toast.LENGTH_LONG).show();
+        errorLayout.setVisibility(View.VISIBLE);
+        errorLayout.setText(message);
+        Log.e(TAG,message);
     }
 
     @Override

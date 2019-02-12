@@ -2,6 +2,7 @@ package com.movielist.presenter.activity_presenters;
 
 import android.util.Log;
 
+import com.movielist.model.Error;
 import com.movielist.model.TmdbConstants;
 import com.movielist.model.entity.Configuration;
 import com.movielist.model.entity.catalog.User;
@@ -80,7 +81,7 @@ public class CatalogPresenter {
             @Override
             public void onFailure(@NonNull Call<Configuration> call,@NonNull Throwable t) {
                 mListener.onError(t.getMessage());
-                Log.e(TAG,t.toString());
+                Log.e(TAG, Error.NETWORK_ERROR);
             }
         });
     }

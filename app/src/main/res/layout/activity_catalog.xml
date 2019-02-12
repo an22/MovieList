@@ -13,6 +13,8 @@
         android:background="@color/colorPrimaryDark"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <include android:id="@+id/catalog_activity_error" layout="@layout/error_layout"/>
+
     </FrameLayout>
 
 

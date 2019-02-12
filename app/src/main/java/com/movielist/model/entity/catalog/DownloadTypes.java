@@ -4,5 +4,6 @@ public enum DownloadTypes {
     UPCOMING,
     TOP_RATED,
     POPULAR,
-    QUERY
+    QUERY,
+    PEOPLE
 }

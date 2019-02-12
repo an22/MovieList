@@ -3,7 +3,9 @@ package com.movielist.model.entity.catalog;
 import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
+import com.movielist.model.Error;
 import com.movielist.model.TmdbConstants;
+import com.movielist.model.model_interfaces.Loadable;
 import com.movielist.model.network.RetrofitSingleton;
 import com.movielist.model.network.requests.Movies;
 import com.movielist.presenter.model_listeners.UINetworkListener;
@@ -15,13 +17,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MovieResult {
+public class MovieResult implements Loadable {
 
     @SerializedName("page")
     private int currentPage;
 
     @SerializedName("results")
-    private ArrayList<MovieShort> mShorts;
+    private ArrayList<Movie> mShorts;
 
     @SerializedName("total_pages")
     private int pages;
@@ -105,8 +107,8 @@ public class MovieResult {
 
             @Override
             public void onFailure(@NonNull Call<MovieResult> call,@NonNull Throwable t) {
-                mListener.onError(t.toString());
-                Log.e(TAG,t.toString());
+                mListener.onError(Error.NETWORK_ERROR);
+                Log.e(TAG,Error.NETWORK_ERROR);
             }
         });
     }
@@ -126,8 +128,8 @@ public class MovieResult {
 
             @Override
             public void onFailure(@NonNull Call<MovieResult> call,@NonNull Throwable t) {
-                mListener.onError(t.toString());
-                Log.e(TAG,t.toString());
+                mListener.onError(Error.NETWORK_ERROR);
+                Log.e(TAG,Error.NETWORK_ERROR);
             }
         });
     }
@@ -147,13 +149,17 @@ public class MovieResult {
 
             @Override
             public void onFailure(@NonNull Call<MovieResult> call,@NonNull Throwable t) {
-                mListener.onError(t.toString());
-                Log.e(TAG,t.toString());
+                mListener.onError(Error.NETWORK_ERROR);
+                Log.e(TAG,Error.NETWORK_ERROR);
             }
         });
     }
 
     public void loadFromQuery(String query){
+        if(!query.equals(currentQuery)) {
+            resetPage();
+            mShorts.clear();
+        }
         currentQuery = query;
         loading = true;
         movieRequests.search(TmdbConstants.keyV3,language,region,query,++currentPage).enqueue(new Callback<MovieResult>() {
@@ -170,8 +176,8 @@ public class MovieResult {
 
             @Override
             public void onFailure(@NonNull Call<MovieResult> call,@NonNull Throwable t) {
-                mListener.onError(t.toString());
-                Log.e(TAG,t.toString());
+                mListener.onError(Error.NETWORK_ERROR);
+                Log.e(TAG, Error.NETWORK_ERROR);
             }
         });
     }
@@ -181,17 +187,21 @@ public class MovieResult {
         pages = result.getPages();
     }
 
-    private void replace(MovieResult result){
+    /*private void replace(MovieResult result){
         mShorts.clear();
         mShorts.addAll(result.getShorts());
         pages = result.getPages();
+    }*/
+
+    private void resetPage(){
+        currentPage = 0;
     }
 
     public void setQuery(String query) {
         this.currentQuery = query;
     }
 
-    public ArrayList<MovieShort> getShorts() {
+    public ArrayList<Movie> getShorts() {
         return mShorts;
     }
 

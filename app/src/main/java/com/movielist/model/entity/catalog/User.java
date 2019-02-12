@@ -42,6 +42,29 @@ public class User implements Serializable {
         isGuest = true;
     }
 
+
+    class Avatar implements Serializable {
+
+        @SerializedName("gravatar")
+        private Gravatar gravatar;
+
+        String getGravatar() {
+            return gravatar.getHash();
+        }
+
+        class Gravatar implements Serializable {
+
+            @SerializedName("hash")
+            private String hash;
+
+            String getHash() {
+                return hash;
+            }
+        }
+
+    }
+
+
     //-----------------------------------Getter-----------------------------------------------
 
 

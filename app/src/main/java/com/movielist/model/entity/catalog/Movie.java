@@ -2,7 +2,7 @@ package com.movielist.model.entity.catalog;
 
 import com.google.gson.annotations.SerializedName;
 
-public class MovieShort {
+public class Movie {
 
     @SerializedName("poster_path")
     private String posterPath;
@@ -27,6 +27,9 @@ public class MovieShort {
 
     @SerializedName("vote_average")
     private double average;
+
+    @SerializedName("video")
+    private boolean video;
 
 
     public String getPosterPath() {

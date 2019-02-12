@@ -45,14 +45,14 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home,container,false);
         mUnbinder = ButterKnife.bind(this, view);
 
-        if(getArguments() != null) {
+        ErrorListener errorListener = error -> {
+            mRecyclerView.setVisibility(View.GONE);
+            errorTv.setVisibility(View.VISIBLE);
+            errorTv.setText(error);
+            Log.e(TAG,error);
+        };
 
-            ErrorListener errorListener = error -> {
-                mRecyclerView.setVisibility(View.GONE);
-                errorTv.setVisibility(View.VISIBLE);
-                errorTv.setText(error);
-                Log.e(TAG,error);
-            };
+        if(getArguments() != null) {
 
             Serializable serializableUser = getArguments().getSerializable(User.USER);
             HomeAdapter adapter;
@@ -79,6 +79,7 @@ public class HomeFragment extends Fragment {
             }
 
         }
+        else errorListener.onError(Error.BAD_ARGUMENTS);
 
         return view;
     }

@@ -11,6 +11,7 @@ import com.movielist.model.entity.Configuration;
 import com.movielist.model.entity.catalog.DownloadTypes;
 import com.movielist.model.entity.catalog.MovieResult;
 import com.movielist.presenter.model_listeners.ErrorListener;
+import com.movielist.view.LoadMoreListener;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -86,19 +87,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeHolder> {
             mRecyclerView.setLayoutManager(manager);
             mRecyclerView.setAdapter(adapter);
             mRecyclerView.setHasFixedSize(true);
-            mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-
-                    int itemCount = manager.getItemCount();
-                    int lastVisibleItem = manager.findLastVisibleItemPosition();
-
-                    if(itemCount - lastVisibleItem <= 3) {
-                        result.loadMore();
-                    }
-                }
-            });
+            mRecyclerView.setOnScrollListener(new LoadMoreListener(result,3));
         }
 
         void bind(int pos){

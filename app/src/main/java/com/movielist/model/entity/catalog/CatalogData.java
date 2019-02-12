@@ -2,6 +2,7 @@ package com.movielist.model.entity.catalog;
 
 import android.util.Log;
 
+import com.movielist.model.Error;
 import com.movielist.model.TmdbConstants;
 import com.movielist.model.model_interfaces.CatalogModel;
 import com.movielist.model.network.RetrofitSingleton;
@@ -15,7 +16,8 @@ import retrofit2.Response;
 
 public class CatalogData implements CatalogModel {
 
-    private static final String TAG = "USER";
+    private static final String TAG = "CATALOG_DATA";
+    private static final String USER_TAG = "USER";
 
     private User user;
 
@@ -38,7 +40,7 @@ public class CatalogData implements CatalogModel {
             public void onResponse(@NonNull Call<User> call,@NonNull Response<User> response) {
                 User user = response.body();
                 if(user != null) {
-                    Log.v(TAG, user.toString());
+                    Log.v(USER_TAG, user.toString());
                     CatalogData.this.user = user;
                     listener.onLoaded();
                 }
@@ -49,7 +51,8 @@ public class CatalogData implements CatalogModel {
 
             @Override
             public void onFailure(@NonNull Call<User> call,@NonNull Throwable t) {
-                listener.onError(t.toString());
+                listener.onError(Error.NETWORK_ERROR);
+                Log.e(TAG,Error.NETWORK_ERROR);
             }
         });
 
