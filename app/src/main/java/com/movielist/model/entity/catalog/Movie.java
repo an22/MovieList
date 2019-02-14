@@ -1,8 +1,9 @@
 package com.movielist.model.entity.catalog;
 
 import com.google.gson.annotations.SerializedName;
+import com.movielist.model.model_interfaces.Describable;
 
-public class Movie {
+public class Movie implements Describable {
 
     @SerializedName("poster_path")
     private String posterPath;
@@ -31,8 +32,8 @@ public class Movie {
     @SerializedName("video")
     private boolean video;
 
-
-    public String getPosterPath() {
+    @Override
+    public String getImagePath() {
         return posterPath;
     }
 
@@ -40,6 +41,7 @@ public class Movie {
         return id;
     }
 
+    @Override
     public String getTitle() {
         return title;
     }

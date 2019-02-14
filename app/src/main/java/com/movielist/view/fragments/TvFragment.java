@@ -12,10 +12,7 @@ import android.widget.TextView;
 import com.movielist.R;
 import com.movielist.model.Error;
 import com.movielist.model.entity.Configuration;
-import com.movielist.model.entity.Result;
-import com.movielist.model.entity.catalog.DownloadTypes;
-import com.movielist.model.entity.catalog.MovieResult;
-import com.movielist.model.model_interfaces.Describable;
+import com.movielist.model.entity.catalog.TvResult;
 import com.movielist.presenter.model_listeners.ErrorListener;
 import com.movielist.view.LoadMoreListener;
 import com.movielist.view.activities.CatalogActivity;
@@ -30,13 +27,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class MovieFragment extends ReceiverFragment {
+public class TvFragment extends ReceiverFragment {
 
-    private static final String TAG = "MOVIE_FRAGMENT";
-
-    private MovieResult mResult;
+    private static final String TAG = "TV_FRAGMENT";
 
     private String currentText;
+
+    private TvResult mResult;
 
     private static final int spanCount = 2;
 
@@ -53,7 +50,9 @@ public class MovieFragment extends ReceiverFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_result,container,false);
+
         mUnbinder = ButterKnife.bind(this,view);
+
         ErrorListener listener = error -> {
             if(errorLayout.getVisibility() == View.GONE) {
                 mRecyclerView.setVisibility(View.GONE);
@@ -69,7 +68,7 @@ public class MovieFragment extends ReceiverFragment {
             String language = preferences.getString(CatalogActivity.LANGUAGE,"en");
             String country = preferences.getString(CatalogActivity.COUNTRY,"US");
             if(getArguments() != null) {
-                mResult = new MovieResult(language,country, DownloadTypes.QUERY);
+                mResult = new TvResult(language, country);
                 InnerHomeAdapter adapter = new InnerHomeAdapter(getContext(), mResult, listener);
                 adapter.setConfiguration((Configuration)getArguments().getSerializable(Configuration.TAG));
                 mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCount));
@@ -85,6 +84,8 @@ public class MovieFragment extends ReceiverFragment {
     }
 
 
+    //If query != current query we load data
+    //It helps to avoid repeating requests
     @Override
     public void onReceive(String data) {
         if(!data.equals(currentText)) {

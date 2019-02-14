@@ -27,7 +27,7 @@ import butterknife.Unbinder;
 
 public class HomeFragment extends Fragment {
 
-    private final String TAG = "HOME_FRAGMENT";
+    private static final String TAG = "HOME_FRAGMENT";
 
     @BindView(R.id.home_rv)
     RecyclerView mRecyclerView;

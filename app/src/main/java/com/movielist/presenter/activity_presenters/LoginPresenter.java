@@ -23,15 +23,10 @@ import retrofit2.Response;
 
 public class LoginPresenter {
 
-    private final String TAG = "LOGIN_PRESENTER";
+    private static final String TAG = "LOGIN_PRESENTER";
 
     private LoginView loginActivity;
     private LoginModel loginModel;
-
-    private final String LOGIN_ERROR = "Can`t sign in, try again later";
-    private final String GUEST_ERROR = "Can`t create guest session, try again later";
-    private final String ACCESS_ERROR = "Can`t access to server";
-    private final String SESSION_ERROR = "Can`t get session, try again later";
 
     private static final String NETWORK_TAG = "Network";
 
@@ -62,7 +57,8 @@ public class LoginPresenter {
 
             @Override
             public void onFailure(@NonNull Call<RequestToken> call, @NonNull Throwable t) {
-                loginActivity.onError(LOGIN_ERROR);
+                loginActivity.onError(Error.LOGIN_ERROR);
+                Log.e(TAG,t.toString());
             }
         });
     }
@@ -91,8 +87,8 @@ public class LoginPresenter {
             @Override
             public void onFailure(@NonNull Call<GuestSession> call,@NonNull Throwable t) {
 
-                loginActivity.onError(GUEST_ERROR);
-
+                loginActivity.onError(Error.GUEST_ERROR);
+                Log.e(TAG,t.toString());
             }
         });
 
@@ -106,9 +102,7 @@ public class LoginPresenter {
                 @Override
                 public void onResponse(@NonNull Call<AccessToken> call, @NonNull Response<AccessToken> response) {
                     Log.i(NETWORK_TAG,response.toString());
-                    System.out.println(response.toString());
                     if (loginModel.getAccessToken() != null) {
-
                         getSession();
 
                     }
@@ -116,7 +110,8 @@ public class LoginPresenter {
 
                 @Override
                 public void onFailure(@NonNull Call<AccessToken> call, @NonNull Throwable t) {
-                    loginActivity.onError(ACCESS_ERROR);
+                    loginActivity.onError(Error.ACCESS_ERROR);
+                    Log.e(TAG,t.toString());
                 }
             });
 
@@ -142,7 +137,8 @@ public class LoginPresenter {
 
             @Override
             public void onFailure(@NonNull Call<UserSession> call, @NonNull Throwable t) {
-                loginActivity.onError(SESSION_ERROR);
+                loginActivity.onError(Error.SESSION_ERROR);
+                Log.e(TAG,t.toString());
             }
         });
     }

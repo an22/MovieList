@@ -12,7 +12,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.movielist.R;
 import com.movielist.model.entity.Configuration;
-import com.movielist.model.entity.catalog.MovieResult;
+import com.movielist.model.entity.Result;
+import com.movielist.model.model_interfaces.Describable;
 import com.movielist.presenter.model_listeners.ErrorListener;
 import com.movielist.presenter.model_listeners.UINetworkListener;
 
@@ -24,12 +25,12 @@ import butterknife.OnClick;
 
 public class InnerHomeAdapter extends RecyclerView.Adapter<InnerHomeAdapter.InnerViewHolder> {
 
-    private MovieResult movies;
+    private Result<? extends Describable> movies;
     private Configuration mConfiguration;
     private Context mContext;
 
 
-    public InnerHomeAdapter(Context context, MovieResult movies, ErrorListener errorListener) {
+    public InnerHomeAdapter(Context context, Result<? extends Describable> movies, ErrorListener errorListener) {
         this.movies = movies;
         movies.setListener(new UINetworkListener() {
             @Override
@@ -65,7 +66,7 @@ public class InnerHomeAdapter extends RecyclerView.Adapter<InnerHomeAdapter.Inne
 
     @Override
     public int getItemCount() {
-        return movies.getShorts().size();
+        return movies.getResults().size();
     }
 
 
@@ -83,8 +84,12 @@ public class InnerHomeAdapter extends RecyclerView.Adapter<InnerHomeAdapter.Inne
         }
 
         void bind(int pos){
-            title.setText(movies.getShorts().get(pos).getTitle());
-            Glide.with(mContext).load(mConfiguration.getImageConfig().getSecureBaseUrl() + mConfiguration.getImageConfig().getPosterSizes()[3] + movies.getShorts().get(pos).getPosterPath()).into(poster);
+            title.setText(movies.getResults().get(pos).getTitle());
+            Glide.with(mContext).load(
+                    mConfiguration.getImageConfig().getSecureBaseUrl() +
+                            mConfiguration.getImageConfig().getPosterSizes()[3] +
+                            movies.getResults().get(pos).getImagePath())
+                    .into(poster);
 
         }
 

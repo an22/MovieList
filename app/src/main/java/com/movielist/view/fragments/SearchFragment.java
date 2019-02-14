@@ -2,6 +2,7 @@ package com.movielist.view.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,8 @@ import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.movielist.R;
+import com.movielist.model.Error;
 import com.movielist.model.entity.Configuration;
-import com.movielist.model.entity.catalog.DownloadTypes;
 import com.movielist.presenter.model_listeners.Sender;
 import com.movielist.view.adapters.SearchResultAdapter;
 
@@ -29,9 +30,7 @@ import butterknife.Unbinder;
 public class SearchFragment extends Fragment implements Sender {
 
 
-    private final String TAG = "SEARCH_FRAGMENT";
-
-    private DownloadTypes[] fragmentTypes = {DownloadTypes.QUERY};
+    private static final String TAG = "SEARCH_FRAGMENT";
 
     @BindView(R.id.view_pager)
     ViewPager pager;
@@ -48,22 +47,44 @@ public class SearchFragment extends Fragment implements Sender {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-         View view = inflater.inflate(R.layout.fragment_search,container,false);
-         mUnbinder = ButterKnife.bind(this,view);
 
-         adapter = new SearchResultAdapter(getChildFragmentManager());
-         pager.setAdapter(adapter);
-         tabsLayout.setupWithViewPager(pager);
-         MovieFragment fragment = new MovieFragment();
+        View view = inflater.inflate(R.layout.fragment_search,container,false);
 
-         if(getArguments() != null) {
+
+        mUnbinder = ButterKnife.bind(this,view);
+
+        adapter = new SearchResultAdapter(getChildFragmentManager());
+        pager.setAdapter(adapter);
+        tabsLayout.setupWithViewPager(pager);
+
+        MovieFragment movieFragment = new MovieFragment();
+        PersonFragment personFragment = new PersonFragment();
+        TvFragment tvFragment = new TvFragment();
+
+        if(getArguments() != null) {
              Bundle args = new Bundle();
              args.putSerializable(Configuration.TAG, getArguments().getSerializable(Configuration.TAG));
-             fragment.setArguments(args);
-         }
-         adapter.addFragment(fragment,"Movies");
+             movieFragment.setArguments(args);
+             personFragment.setArguments(args);
+             tvFragment.setArguments(args);
+        }
+        else {
+             Log.e(TAG, Error.BAD_ARGUMENTS);
+        }
+        adapter.addFragment(movieFragment,"Movies");
+        adapter.addFragment(personFragment,"People");
+        adapter.addFragment(tvFragment,"TV");
 
-         return view;
+        pager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
+             @Override
+             public void onPageSelected(int position){
+                 if(searchField.getText().length() != 0){
+                     adapter.getItem(position).onReceive(String.valueOf(searchField.getText()));
+                 }
+             }
+        });
+
+        return view;
     }
 
     @OnEditorAction(R.id.search_field)
@@ -85,7 +106,7 @@ public class SearchFragment extends Fragment implements Sender {
     @Override
     public void sendMessage(String data) {
         int pos = tabsLayout.getSelectedTabPosition();
-        adapter.getItem(pos).onRecieve(data);
+        adapter.getItem(pos).onReceive(data);
     }
 
     @Override

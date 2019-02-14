@@ -1,19 +1,20 @@
 package com.movielist.view.adapters;
 
-import com.movielist.view.fragments.MovieFragment;
+import com.movielist.view.view_interfaces.ReceiverFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 public class SearchResultAdapter extends FragmentPagerAdapter {
 
     private List<String> tabs;
-    private List<MovieFragment> mFragmentList;
+    private List<ReceiverFragment> mFragmentList;
 
     public SearchResultAdapter(@NonNull FragmentManager fm) {
         super(fm);
@@ -21,7 +22,7 @@ public class SearchResultAdapter extends FragmentPagerAdapter {
         tabs = new ArrayList<>();
     }
 
-    public void addFragment(MovieFragment fragment, String title){
+    public void addFragment(ReceiverFragment fragment, String title){
         mFragmentList.add(fragment);
         tabs.add(title);
         notifyDataSetChanged();
@@ -36,7 +37,7 @@ public class SearchResultAdapter extends FragmentPagerAdapter {
 
     @NonNull
     @Override
-    public MovieFragment getItem(int position) {
+    public ReceiverFragment getItem(int position) {
         return mFragmentList.get(position);
     }
 

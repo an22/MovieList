@@ -6,8 +6,8 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-public interface Peoples {
+public interface People {
 
-    @GET
+    @GET("/3/search/person")
     Call<PersonResult> search(@Query("api_key") String key, @Query("language") String language, @Query("region") String region, @Query("query")String query, @Query("page") int page);
 }

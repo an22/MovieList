@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class LogoActivity extends AppCompatActivity {
 
-    private final String TAG = "LOGO_ACTIVITY";
+    private static final String TAG = "LOGO_ACTIVITY";
 
     //Database helper
     private KeyDbHelper keyHelper;
