@@ -26,13 +26,13 @@ public class TvResult extends Result<TV> {
 
     @Override
     public void loadFromQuery(String query) {
+        listener.onStart();
         if(!query.equals(currentQuery)) {
             resetPage();
             results.clear();
             currentQuery = query;
         }
-        loading = true;
-        mTvShows.search(TmdbConstants.keyV3,language,query,++currentPage).enqueue(new Callback<TvResult>() {
+        mTvShows.search(TmdbConstants.keyV3,language,query,currentPage).enqueue(new Callback<TvResult>() {
             @Override
             public void onResponse(@NonNull Call<TvResult> call,@NonNull Response<TvResult> response) {
                 TvResult result = response.body();
@@ -55,6 +55,8 @@ public class TvResult extends Result<TV> {
 
     @Override
     public void loadMore() {
-        loadFromQuery(currentQuery);
+        if (!loading&&canLoadPage()){
+            loadFromQuery(currentQuery);
+        }
     }
 }

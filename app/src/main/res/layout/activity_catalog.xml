@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@color/colorPrimary"
-        app:itemIconTint="@color/textColor"
+        app:itemIconTint="@color/icon_navigation"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/navigation">
 

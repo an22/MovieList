@@ -51,6 +51,11 @@ public class CatalogPresenter {
             }
 
             @Override
+            public void onStart() {
+
+            }
+
+            @Override
             public void onError(String error) {
                 view.onError(error);
             }

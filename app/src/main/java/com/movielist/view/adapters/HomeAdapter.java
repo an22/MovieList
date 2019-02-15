@@ -10,7 +10,7 @@ import com.movielist.R;
 import com.movielist.model.entity.Configuration;
 import com.movielist.model.entity.catalog.DownloadTypes;
 import com.movielist.model.entity.catalog.MovieResult;
-import com.movielist.presenter.model_listeners.ErrorListener;
+import com.movielist.presenter.model_listeners.UINetworkListener;
 import com.movielist.view.LoadMoreListener;
 
 import androidx.annotation.NonNull;
@@ -32,10 +32,10 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeHolder> {
     private String language;
     private String country;
 
-    private ErrorListener mListener;
+    private UINetworkListener mListener;
 
 
-    public HomeAdapter(Context context, ErrorListener errorListener, String language, String country,Configuration configuration) {
+    public HomeAdapter(Context context, UINetworkListener errorListener, String language, String country, Configuration configuration) {
         mContext = context;
         mListener = errorListener;
         this.language = language;
@@ -58,7 +58,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeHolder> {
 
     @Override
     public int getItemCount() {
-        return 3;
+        return keys.length;
     }
 
     class HomeHolder extends RecyclerView.ViewHolder{

@@ -84,6 +84,7 @@ public class SearchFragment extends Fragment implements Sender {
              }
         });
 
+        pager.setOffscreenPageLimit(adapter.getCount());
         return view;
     }
 

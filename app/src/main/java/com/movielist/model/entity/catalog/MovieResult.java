@@ -39,7 +39,7 @@ public class MovieResult extends Result<Movie> {
     }
 
     public void loadMore(){
-        if(!loading&& currentPage < pages) {
+        if(!loading && canLoadPage()) {
             switch (type) {
                 case UPCOMING: {
                     loading = true;
@@ -68,29 +68,29 @@ public class MovieResult extends Result<Movie> {
 
     }
 
-    private void loadTopRated() {
-        movieRequests.getTopRated(TmdbConstants.keyV3, language,region, ++currentPage).enqueue(new Callback<MovieResult>() {
-            @Override
-            public void onResponse(@NonNull Call<MovieResult> call,@NonNull Response<MovieResult> response) {
-                MovieResult movieResult = response.body();
-                Log.i(NETWORK_TAG,response.toString());
-                if (movieResult != null) {
-                    add(movieResult);
-                    loading = false;
-                    listener.onLoaded();
+    private void loadTopRated()  {
+            movieRequests.getTopRated(TmdbConstants.keyV3, language, region, currentPage).enqueue(new Callback<MovieResult>() {
+                @Override
+                public void onResponse(@NonNull Call<MovieResult> call, @NonNull Response<MovieResult> response) {
+                    MovieResult movieResult = response.body();
+                    Log.i(NETWORK_TAG, response.toString());
+                    if (movieResult != null) {
+                        add(movieResult);
+                        loading = false;
+                        listener.onLoaded();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(@NonNull Call<MovieResult> call,@NonNull Throwable t) {
-                listener.onError(Error.NETWORK_ERROR);
-                Log.e(NETWORK_TAG,t.toString());
-            }
-        });
+                @Override
+                public void onFailure(@NonNull Call<MovieResult> call, @NonNull Throwable t) {
+                    listener.onError(Error.NETWORK_ERROR);
+                    Log.e(NETWORK_TAG, t.toString());
+                }
+            });
     }
 
     private void loadPopular() {
-        movieRequests.getPopular(TmdbConstants.keyV3, language,region, ++currentPage).enqueue(new Callback<MovieResult>() {
+        movieRequests.getPopular(TmdbConstants.keyV3, language,region, currentPage).enqueue(new Callback<MovieResult>() {
             @Override
             public void onResponse(@NonNull Call<MovieResult> call,@NonNull Response<MovieResult> response) {
                 MovieResult movieResult = response.body();
@@ -111,7 +111,7 @@ public class MovieResult extends Result<Movie> {
     }
 
     private void loadUpcoming() {
-        movieRequests.getUpcoming(TmdbConstants.keyV3, language,region, ++currentPage).enqueue(new Callback<MovieResult>() {
+        movieRequests.getUpcoming(TmdbConstants.keyV3, language,region, currentPage).enqueue(new Callback<MovieResult>() {
             @Override
             public void onResponse(@NonNull Call<MovieResult> call,@NonNull Response<MovieResult> response) {
                 MovieResult movieResult = response.body();
@@ -133,13 +133,13 @@ public class MovieResult extends Result<Movie> {
 
     @Override
     public void loadFromQuery(String query){
+        listener.onStart();
         if(!query.equals(currentQuery)) {
             resetPage();
             results.clear();
             currentQuery = query;
         }
-        loading = true;
-        movieRequests.search(TmdbConstants.keyV3,language,region,query,++currentPage).enqueue(new Callback<MovieResult>() {
+        movieRequests.search(TmdbConstants.keyV3,language,region,query,currentPage).enqueue(new Callback<MovieResult>() {
             @Override
             public void onResponse(@NonNull Call<MovieResult> call,@NonNull Response<MovieResult> response) {
                 MovieResult movieResult = response.body();
@@ -158,13 +158,6 @@ public class MovieResult extends Result<Movie> {
             }
         });
     }
-
-
-    /*private void replace(MovieResult result){
-        mShorts.clear();
-        mShorts.addAll(result.getShorts());
-        pages = result.getPages();
-    }*/
 
 
     public void setQuery(String query) {

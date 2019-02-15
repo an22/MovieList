@@ -5,13 +5,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.movielist.R;
 import com.movielist.model.Error;
 import com.movielist.model.entity.Configuration;
 import com.movielist.model.entity.catalog.User;
-import com.movielist.presenter.model_listeners.ErrorListener;
+import com.movielist.presenter.model_listeners.UINetworkListener;
 import com.movielist.view.adapters.HomeAdapter;
 
 import java.io.Serializable;
@@ -35,6 +36,9 @@ public class HomeFragment extends Fragment {
     @BindView(R.id.error_home)
     TextView errorTv;
 
+    @BindView(R.id.progress)
+    ProgressBar mProgressBar;
+
     private Unbinder mUnbinder;
 
 
@@ -45,11 +49,27 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home,container,false);
         mUnbinder = ButterKnife.bind(this, view);
 
-        ErrorListener errorListener = error -> {
-            mRecyclerView.setVisibility(View.GONE);
-            errorTv.setVisibility(View.VISIBLE);
-            errorTv.setText(error);
-            Log.e(TAG,error);
+        UINetworkListener listener = new UINetworkListener() {
+            @Override
+            public void onLoaded() {
+                mProgressBar.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onStart() {
+                mProgressBar.setVisibility(View.VISIBLE);
+                mRecyclerView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onError(String error) {
+                mRecyclerView.setVisibility(View.GONE);
+                errorTv.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.GONE);
+                errorTv.setText(error);
+                Log.e(TAG,error);
+            }
         };
 
         if(getArguments() != null) {
@@ -63,7 +83,7 @@ public class HomeFragment extends Fragment {
 
                 adapter = new HomeAdapter(
                         getContext(),
-                        errorListener,
+                        listener,
                         user.getLanguage(),
                         user.getCountry(),
                         (Configuration)getArguments().getSerializable(Configuration.TAG));
@@ -75,11 +95,11 @@ public class HomeFragment extends Fragment {
 
             }
             else {
-                errorListener.onError(Error.USER_ERROR);
+                listener.onError(Error.USER_ERROR);
             }
 
         }
-        else errorListener.onError(Error.BAD_ARGUMENTS);
+        else listener.onError(Error.BAD_ARGUMENTS);
 
         return view;
     }

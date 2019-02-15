@@ -27,19 +27,22 @@ public class PersonResult extends Result<Person> {
 
     @Override
     public void loadMore() {
-        loadFromQuery(currentQuery);
+        if(!loading&&canLoadPage()) {
+            loading = true;
+            loadFromQuery(currentQuery);
+        }
     }
 
 
     @Override
     public void loadFromQuery(String query){
+        listener.onStart();
         if(!query.equals(currentQuery)) {
             resetPage();
             results.clear();
             currentQuery = query;
         }
-        loading = true;
-        mPeople.search(TmdbConstants.keyV3,language,region,query,++currentPage).enqueue(new Callback<PersonResult>() {
+        mPeople.search(TmdbConstants.keyV3,language,region,query,currentPage).enqueue(new Callback<PersonResult>() {
             @Override
             public void onResponse(@NonNull Call<PersonResult> call,@NonNull Response<PersonResult> response) {
                 PersonResult result = response.body();

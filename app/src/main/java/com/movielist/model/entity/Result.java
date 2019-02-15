@@ -19,7 +19,7 @@ public abstract class Result<T extends Describable> implements Loadable {
     protected ArrayList<T> results;
 
     @SerializedName("total_pages")
-    protected int pages;
+    private int pages;
 
     protected UINetworkListener listener;
 
@@ -31,7 +31,7 @@ public abstract class Result<T extends Describable> implements Loadable {
         results = new ArrayList<>();
         this.language = language;
         this.region = region;
-        this.pages = 1;
+        this.pages = 2;
         this.currentPage = 0;
     }
 
@@ -43,7 +43,7 @@ public abstract class Result<T extends Describable> implements Loadable {
     }
 
     protected void resetPage(){
-        currentPage = 0;
+        currentPage = 1;
     }
 
     public void setListener(UINetworkListener listener) {
@@ -54,7 +54,15 @@ public abstract class Result<T extends Describable> implements Loadable {
         return results;
     }
 
-    public int getPages() {
+    int getPages() {
         return pages;
+    }
+
+    protected boolean canLoadPage(){
+        if(currentPage < pages){
+            currentPage++;
+            return true;
+        }
+        return false;
     }
 }

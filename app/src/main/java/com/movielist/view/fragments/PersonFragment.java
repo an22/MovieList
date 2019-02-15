@@ -7,13 +7,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.movielist.R;
 import com.movielist.model.Error;
 import com.movielist.model.entity.Configuration;
 import com.movielist.model.entity.catalog.PersonResult;
-import com.movielist.presenter.model_listeners.ErrorListener;
+import com.movielist.presenter.model_listeners.UINetworkListener;
 import com.movielist.view.LoadMoreListener;
 import com.movielist.view.activities.CatalogActivity;
 import com.movielist.view.adapters.InnerHomeAdapter;
@@ -43,6 +44,9 @@ public class PersonFragment extends ReceiverFragment {
     @BindView(R.id.rv_result)
     RecyclerView mRecyclerView;
 
+    @BindView(R.id.progress)
+    ProgressBar mProgressBar;
+
     private Unbinder mUnbinder;
 
 
@@ -53,14 +57,29 @@ public class PersonFragment extends ReceiverFragment {
 
         mUnbinder = ButterKnife.bind(this,view);
 
-        ErrorListener listener = error -> {
-            if(errorLayout.getVisibility() == View.GONE) {
-                mRecyclerView.setVisibility(View.GONE);
-                errorLayout.setVisibility(View.VISIBLE);
-                errorLayout.setText(error);
+        UINetworkListener listener = new UINetworkListener() {
+            @Override
+            public void onLoaded() {
+                mProgressBar.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
             }
-            Log.e(TAG, error);
 
+            @Override
+            public void onStart() {
+                mProgressBar.setVisibility(View.VISIBLE);
+                mRecyclerView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onError(String error) {
+                if(errorLayout.getVisibility() == View.GONE) {
+                    mRecyclerView.setVisibility(View.GONE);
+                    mProgressBar.setVisibility(View.GONE);
+                    errorLayout.setVisibility(View.VISIBLE);
+                    errorLayout.setText(error);
+                }
+                Log.e(TAG, error);
+            }
         };
 
         if(getActivity() != null) {

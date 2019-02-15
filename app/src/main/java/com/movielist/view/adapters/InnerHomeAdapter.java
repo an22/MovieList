@@ -14,7 +14,6 @@ import com.movielist.R;
 import com.movielist.model.entity.Configuration;
 import com.movielist.model.entity.Result;
 import com.movielist.model.model_interfaces.Describable;
-import com.movielist.presenter.model_listeners.ErrorListener;
 import com.movielist.presenter.model_listeners.UINetworkListener;
 
 import androidx.annotation.NonNull;
@@ -30,17 +29,23 @@ public class InnerHomeAdapter extends RecyclerView.Adapter<InnerHomeAdapter.Inne
     private Context mContext;
 
 
-    public InnerHomeAdapter(Context context, Result<? extends Describable> movies, ErrorListener errorListener) {
+    public InnerHomeAdapter(Context context, Result<? extends Describable> movies, UINetworkListener listener) {
         this.movies = movies;
         movies.setListener(new UINetworkListener() {
             @Override
             public void onLoaded() {
                 notifyDataSetChanged();
+                listener.onLoaded();
+            }
+
+            @Override
+            public void onStart() {
+                listener.onStart();
             }
 
             @Override
             public void onError(String error) {
-                errorListener.onError(error);
+                listener.onError(error);
             }
         });
         this.mContext = context;
@@ -85,11 +90,15 @@ public class InnerHomeAdapter extends RecyclerView.Adapter<InnerHomeAdapter.Inne
 
         void bind(int pos){
             title.setText(movies.getResults().get(pos).getTitle());
-            Glide.with(mContext).load(
-                    mConfiguration.getImageConfig().getSecureBaseUrl() +
-                            mConfiguration.getImageConfig().getPosterSizes()[3] +
-                            movies.getResults().get(pos).getImagePath())
-                    .into(poster);
+            if(movies.getResults().get(pos).getImagePath() != null) {
+                Glide.with(mContext).load(
+                        mConfiguration.getImageConfig().getSecureBaseUrl() +
+                                mConfiguration.getImageConfig().getPosterSizes()[3] +
+                                movies.getResults().get(pos).getImagePath())
+                        .into(poster);
+            }else{
+                poster.setImageResource(R.drawable.blur60);
+            }
 
         }
 
