@@ -1,6 +1,9 @@
 package com.movielist.view.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +16,10 @@ import com.bumptech.glide.Glide;
 import com.movielist.R;
 import com.movielist.model.entity.Configuration;
 import com.movielist.model.entity.Result;
+import com.movielist.model.entity.moviedetails.MovieDetailed;
 import com.movielist.model.model_interfaces.Describable;
 import com.movielist.presenter.model_listeners.UINetworkListener;
+import com.movielist.view.activities.MovieActivity;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,14 +29,14 @@ import butterknife.OnClick;
 
 public class InnerHomeAdapter extends RecyclerView.Adapter<InnerHomeAdapter.InnerViewHolder> {
 
-    private Result<? extends Describable> movies;
+    private Result<? extends Describable> result;
     private Configuration mConfiguration;
     private Context mContext;
 
 
-    public InnerHomeAdapter(Context context, Result<? extends Describable> movies, UINetworkListener listener) {
-        this.movies = movies;
-        movies.setListener(new UINetworkListener() {
+    public InnerHomeAdapter(Context context, Result<? extends Describable> result, UINetworkListener listener) {
+        this.result = result;
+        result.setListener(new UINetworkListener() {
             @Override
             public void onLoaded() {
                 notifyDataSetChanged();
@@ -60,7 +65,6 @@ public class InnerHomeAdapter extends RecyclerView.Adapter<InnerHomeAdapter.Inne
     @Override
     public InnerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getRootView().getContext()).inflate(R.layout.inner_item,parent,false);
-
         return new InnerViewHolder(view);
     }
 
@@ -71,7 +75,7 @@ public class InnerHomeAdapter extends RecyclerView.Adapter<InnerHomeAdapter.Inne
 
     @Override
     public int getItemCount() {
-        return movies.getResults().size();
+        return result.getResults().size();
     }
 
 
@@ -89,12 +93,12 @@ public class InnerHomeAdapter extends RecyclerView.Adapter<InnerHomeAdapter.Inne
         }
 
         void bind(int pos){
-            title.setText(movies.getResults().get(pos).getTitle());
-            if(movies.getResults().get(pos).getImagePath() != null) {
+            title.setText(result.getResults().get(pos).getTitle());
+            if(result.getResults().get(pos).getImagePath() != null) {
                 Glide.with(mContext).load(
                         mConfiguration.getImageConfig().getSecureBaseUrl() +
                                 mConfiguration.getImageConfig().getPosterSizes()[3] +
-                                movies.getResults().get(pos).getImagePath())
+                                result.getResults().get(pos).getImagePath())
                         .into(poster);
             }else{
                 poster.setImageResource(R.drawable.blur60);
@@ -104,8 +108,19 @@ public class InnerHomeAdapter extends RecyclerView.Adapter<InnerHomeAdapter.Inne
 
         @OnClick(R.id.poster)
         void onPosterTouch(){
+            if(Build.VERSION.SDK_INT < 23) {
                 Animation anim = AnimationUtils.loadAnimation(mContext, R.anim.poster_scaling);
                 poster.startAnimation(anim);
+            }
+
+            Bundle arguments = new Bundle();
+            arguments.putSerializable(Configuration.TAG,mConfiguration);
+            arguments.putInt(MovieDetailed.TAG,result.getResults().get(getLayoutPosition()).getID());
+            Intent movieActivity = new Intent(mContext, MovieActivity.class);
+
+            movieActivity.putExtras(arguments);
+
+            mContext.startActivity(movieActivity);
         }
     }
 }

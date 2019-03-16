@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:text="@string/as_guest"
         android:textColor="@color/colorPrimaryDark"
-        android:background="@drawable/ripple_default"
+        android:background="?selectableItemBackground"
         android:padding="8dp"/>
 
 </LinearLayout>

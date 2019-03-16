@@ -35,6 +35,8 @@ public class MovieFragment extends ReceiverFragment {
 
     private MovieResult mResult;
 
+    private int count;
+
     private String currentText;
 
     private static final int spanCount = 2;
@@ -66,8 +68,12 @@ public class MovieFragment extends ReceiverFragment {
 
             @Override
             public void onStart() {
-                mProgressBar.setVisibility(View.VISIBLE);
-                mRecyclerView.setVisibility(View.GONE);
+                count++;
+
+                if(count <= 1) {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    mRecyclerView.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -93,6 +99,7 @@ public class MovieFragment extends ReceiverFragment {
                 mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCount));
                 mRecyclerView.setAdapter(adapter);
                 mRecyclerView.setOnScrollListener(new LoadMoreListener(mResult,6));
+                mRecyclerView.setHasFixedSize(true);
 
             }else listener.onError(Error.BAD_ARGUMENTS);
         }
@@ -106,11 +113,10 @@ public class MovieFragment extends ReceiverFragment {
     @Override
     public void onReceive(String data) {
         if(!data.equals(currentText)) {
+            count = 0;
             currentText = data;
             mResult.loadFromQuery(data);
-            if(mRecyclerView.getAdapter().getItemCount()!=0) {
-                mRecyclerView.scrollToPosition(0);
-            }
+            mRecyclerView.scrollToPosition(0);
         }
     }
 

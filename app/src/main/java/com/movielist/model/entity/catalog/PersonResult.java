@@ -16,7 +16,6 @@ import retrofit2.Response;
 public class PersonResult extends Result<Person> {
 
     private People mPeople;
-    private String currentQuery;
 
     public PersonResult(String language, String region) {
         super(language, region);
@@ -37,11 +36,7 @@ public class PersonResult extends Result<Person> {
     @Override
     public void loadFromQuery(String query){
         listener.onStart();
-        if(!query.equals(currentQuery)) {
-            resetPage();
-            results.clear();
-            currentQuery = query;
-        }
+        checkQuery(query);
         mPeople.search(TmdbConstants.keyV3,language,region,query,currentPage).enqueue(new Callback<PersonResult>() {
             @Override
             public void onResponse(@NonNull Call<PersonResult> call,@NonNull Response<PersonResult> response) {

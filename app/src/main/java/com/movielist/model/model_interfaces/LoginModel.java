@@ -10,6 +10,7 @@ public interface LoginModel {
     RequestToken getRequestToken();
     boolean saveDataToDb(String column,String data);
     boolean loadRequestTokenFromDb();
+    boolean loadAccessTokenFromDb();
 
 
 

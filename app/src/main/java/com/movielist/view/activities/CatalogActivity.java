@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -26,7 +27,7 @@ import butterknife.ButterKnife;
 
 public class CatalogActivity extends AppCompatActivity implements CatalogView {
 
-    private final String TAG = "CATALOG_ACTIVITY";
+    private static final String TAG = "CATALOG_ACTIVITY";
 
     private CatalogPresenter mPresenter;
     public static final String LANGUAGE = "language";
@@ -37,6 +38,9 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
 
     @BindView(R.id.catalog_activity_error)
     TextView errorLayout;
+
+    @BindView(R.id.progress)
+    ProgressBar mProgressBar;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,7 +58,7 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
             }
             CatalogData data = new CatalogData();
             mPresenter = new CatalogPresenter(this,data);
-            mPresenter.loadUser(session);
+            mPresenter.loadUser(session,this);
         }
         else {
             onError(Error.USER_ERROR);
@@ -65,30 +69,14 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
                 switch (item.getItemId()){
                     case R.id.run_home:{
                         item.setIcon(R.drawable.ic_home_white_24dp);
-                        bottomNavigation.getMenu().getItem(1).setIcon(R.drawable.ic_outline_view_list_24dp);
-                        bottomNavigation.getMenu().getItem(3).setIcon(R.drawable.ic_person_outline_white_24dp);
                         runHome(mPresenter.getConfiguration());
-                        return true;
-                    }
-                    case R.id.run_catalog:{
-                        bottomNavigation.getMenu().getItem(0).setIcon(R.drawable.ic_outline_home_24dp);
-                        item.setIcon(R.drawable.ic_view_list_white_24dp);
-                        bottomNavigation.getMenu().getItem(3).setIcon(R.drawable.ic_person_outline_white_24dp);
-                        runCatalog(mPresenter.getConfiguration());
+                        hideProgress();
                         return true;
                     }
                     case R.id.run_search:{
                         bottomNavigation.getMenu().getItem(0).setIcon(R.drawable.ic_outline_home_24dp);
-                        bottomNavigation.getMenu().getItem(1).setIcon(R.drawable.ic_outline_view_list_24dp);
-                        bottomNavigation.getMenu().getItem(3).setIcon(R.drawable.ic_person_outline_white_24dp);
                         runSearch(mPresenter.getConfiguration());
-                        return true;
-                    }
-                    case R.id.run_profile:{
-                        item.setIcon(R.drawable.ic_person_white_24dp);
-                        bottomNavigation.getMenu().getItem(0).setIcon(R.drawable.ic_outline_home_24dp);
-                        bottomNavigation.getMenu().getItem(1).setIcon(R.drawable.ic_outline_view_list_24dp);
-                        runProfile(mPresenter.getConfiguration());
+                        hideProgress();
                         return true;
                     }
                     default: return false;
@@ -111,10 +99,19 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
     }
 
     @Override
+    public void showProgress() {
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgress() {
+        mProgressBar.setVisibility(View.GONE);
+    }
+
+    @Override
     public void runHome(Configuration configuration) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
-        args.putSerializable(User.USER, mPresenter.getUser());
         args.putSerializable(Configuration.TAG,configuration);
         fragment.setArguments(args);
         errorLayout.setVisibility(View.GONE);
@@ -130,7 +127,6 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
 
         SearchFragment fragment = new SearchFragment();
         Bundle args = new Bundle();
-        args.putSerializable(User.USER, mPresenter.getUser());
         args.putSerializable(Configuration.TAG,configuration);
         fragment.setArguments(args);
         errorLayout.setVisibility(View.GONE);
@@ -139,15 +135,6 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
                 .replace(R.id.container,fragment)
                 .addToBackStack(null)
                 .commit();
-    }
-
-
-    @Override
-    public void runCatalog(Configuration configuration) {
-    }
-
-    @Override
-    public void runProfile(Configuration configuration) {
     }
 
     @Override

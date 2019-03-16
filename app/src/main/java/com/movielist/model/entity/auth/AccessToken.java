@@ -4,11 +4,13 @@ import com.google.gson.annotations.SerializedName;
 
 public class AccessToken {
 
+    public static String TAG = "AccessToken";
+
     @SerializedName("account_id")
     private String accountId;
 
     @SerializedName("access_token")
-    private String access_token;
+    private String accessToken;
 
     @SerializedName("success")
     private boolean success;
@@ -16,7 +18,11 @@ public class AccessToken {
     @SerializedName("status_message")
     private String statusMessage;
 
+    public AccessToken(String accessToken){
+        this.accessToken = accessToken;
+    }
+
     public String getToken() {
-        return access_token;
+        return accessToken;
     }
 }

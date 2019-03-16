@@ -8,7 +8,6 @@ import com.movielist.database.KeyContract.KeyColumns;
 public class KeyDbHelper extends SQLiteOpenHelper {
 
     public static final String REQUEST_TOKEN = "RequestToken";
-    public static final String ACCESS_TOKEN = "AccessToken";
     public static final String GUEST_SESSION = "GuestSession";
     public static final String SESSION = "UserSession";
 
@@ -19,6 +18,7 @@ public class KeyDbHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    //Database creation
     @Override
     public void onCreate(SQLiteDatabase db) {
         String SQL_CREATE = "CREATE TABLE " + KeyColumns.TABLE_NAME + " (" +
@@ -28,6 +28,7 @@ public class KeyDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE);
     }
 
+    //Recreate database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         String SQL_DELETE = "DROP TABLE IF EXISTS " + KeyColumns.TABLE_NAME;

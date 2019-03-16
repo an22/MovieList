@@ -18,8 +18,6 @@ public class MovieResult extends Result<Movie> {
 
     private DownloadTypes type;
 
-    private String currentQuery;
-
     private Movies movieRequests;
 
 
@@ -134,11 +132,7 @@ public class MovieResult extends Result<Movie> {
     @Override
     public void loadFromQuery(String query){
         listener.onStart();
-        if(!query.equals(currentQuery)) {
-            resetPage();
-            results.clear();
-            currentQuery = query;
-        }
+        checkQuery(query);
         movieRequests.search(TmdbConstants.keyV3,language,region,query,currentPage).enqueue(new Callback<MovieResult>() {
             @Override
             public void onResponse(@NonNull Call<MovieResult> call,@NonNull Response<MovieResult> response) {

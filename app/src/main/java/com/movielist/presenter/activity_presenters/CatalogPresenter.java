@@ -1,5 +1,6 @@
 package com.movielist.presenter.activity_presenters;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.movielist.model.Error;
@@ -9,7 +10,7 @@ import com.movielist.model.entity.catalog.User;
 import com.movielist.model.model_interfaces.CatalogModel;
 import com.movielist.model.network.RetrofitSingleton;
 import com.movielist.model.network.requests.GetImageCfg;
-import com.movielist.presenter.model_listeners.NetworkListener;
+import com.movielist.presenter.model_listeners.GuestListener;
 import com.movielist.view.view_interfaces.CatalogView;
 
 import java.io.Serializable;
@@ -26,15 +27,17 @@ public class CatalogPresenter {
 
     private CatalogModel model;
     private CatalogView view;
+
     private boolean loaded = false;
     private boolean isGuest = false;
-    private NetworkListener mListener;
+
+    private GuestListener mListener;
     private Configuration mConfiguration;
 
     public CatalogPresenter(CatalogView view,CatalogModel model) {
         this.model = model;
         this.view = view;
-        this.mListener = new NetworkListener() {
+        this.mListener = new GuestListener() {
             @Override
             public void onGuest() {
                 isGuest = true;
@@ -46,13 +49,14 @@ public class CatalogPresenter {
                 loaded = true;
                 view.saveLanguage();
                 if(mConfiguration != null) {
+                    view.hideProgress();
                     view.runHome(mConfiguration);
                 }
             }
 
             @Override
             public void onStart() {
-
+                view.showProgress();
             }
 
             @Override
@@ -64,8 +68,8 @@ public class CatalogPresenter {
         loadConfig();
     }
 
-    public void loadUser(String session){
-        model.loadUser(session,mListener);
+    public void loadUser(String session, Context context){
+        model.loadUser(session,mListener,context);
     }
 
     private void loadConfig(){
@@ -106,5 +110,6 @@ public class CatalogPresenter {
 
     public void onDestroy(){
         view = null;
+        model = null;
     }
 }

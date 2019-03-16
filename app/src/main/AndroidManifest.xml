@@ -40,6 +40,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".view.activities.MovieActivity"/>
+
     </application>
 
 </manifest>

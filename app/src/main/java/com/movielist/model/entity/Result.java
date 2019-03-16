@@ -16,34 +16,46 @@ public abstract class Result<T extends Describable> implements Loadable {
     protected int currentPage;
 
     @SerializedName("results")
-    protected ArrayList<T> results;
+    private ArrayList<T> results;
 
     @SerializedName("total_pages")
     private int pages;
 
+    //Error and loading listener
     protected UINetworkListener listener;
 
     protected boolean loading = false;
     protected String language;
     protected String region;
+    protected String currentQuery;
 
     public Result(String language,String region){
         results = new ArrayList<>();
         this.language = language;
         this.region = region;
-        this.pages = 2;
+        this.pages = 1;
         this.currentPage = 0;
     }
 
     public abstract void loadFromQuery(String query);
 
+    //Generic method
+    //We can`t use Result<T> because possible lose of data
     protected <V extends Result<T>> void add( V result){
         results.addAll(result.getResults());
         pages = result.getPages();
     }
 
-    protected void resetPage(){
+    private void resetPage(){
         currentPage = 1;
+    }
+
+    protected void checkQuery(String query){
+        if(!query.equals(currentQuery)) {
+            resetPage();
+            results.clear();
+            currentQuery = query;
+        }
     }
 
     public void setListener(UINetworkListener listener) {

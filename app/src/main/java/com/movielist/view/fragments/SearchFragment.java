@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -25,6 +26,7 @@ import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnEditorAction;
+import butterknife.OnTouch;
 import butterknife.Unbinder;
 
 public class SearchFragment extends Fragment implements Sender {
@@ -60,17 +62,17 @@ public class SearchFragment extends Fragment implements Sender {
         MovieFragment movieFragment = new MovieFragment();
         PersonFragment personFragment = new PersonFragment();
         TvFragment tvFragment = new TvFragment();
+        Bundle args = new Bundle();
 
-        if(getArguments() != null) {
-             Bundle args = new Bundle();
-             args.putSerializable(Configuration.TAG, getArguments().getSerializable(Configuration.TAG));
-             movieFragment.setArguments(args);
-             personFragment.setArguments(args);
-             tvFragment.setArguments(args);
+        if (getArguments() != null) {
+            args.putSerializable(Configuration.TAG, getArguments().getSerializable(Configuration.TAG));
+            movieFragment.setArguments(args);
+            personFragment.setArguments(args);
+            tvFragment.setArguments(args);
+        }else{
+            Log.e(TAG, Error.BAD_ARGUMENTS);
         }
-        else {
-             Log.e(TAG, Error.BAD_ARGUMENTS);
-        }
+
         adapter.addFragment(movieFragment,"Movies");
         adapter.addFragment(personFragment,"People");
         adapter.addFragment(tvFragment,"TV");
@@ -96,9 +98,22 @@ public class SearchFragment extends Fragment implements Sender {
                     (InputMethodManager)getActivity()
                     .getSystemService(Context.INPUT_METHOD_SERVICE);
 
-            in.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
+            //Because in may produce NullPointerException
+            if (in != null) {
+                in.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
+            }
             sendMessage(String.valueOf(v.getText()));
             return true;
+        }
+        return false;
+    }
+
+    @OnTouch(R.id.search_field)
+    boolean onTouchSearch(MotionEvent event){
+        if(event.getRawX() >= searchField.getWidth() -
+                searchField.getCompoundDrawables()[2].getBounds().width() -
+                searchField.getPaddingEnd()&& event.getAction() == MotionEvent.ACTION_UP){
+            searchField.getText().clear();
         }
         return false;
     }
@@ -115,4 +130,5 @@ public class SearchFragment extends Fragment implements Sender {
         super.onDestroyView();
         mUnbinder.unbind();
     }
+
 }

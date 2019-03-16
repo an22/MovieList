@@ -30,7 +30,9 @@ public class LoginPresenter {
 
     private static final String NETWORK_TAG = "Network";
 
+    //Network class
     private Authorization mAuthorization;
+
 
     public LoginPresenter(LoginView loginActivity, LoginData mLoginData) {
 
@@ -101,10 +103,14 @@ public class LoginPresenter {
             mAuthorization.getAccessToken("Bearer " + TmdbConstants.keyV4, loginModel.getRequestToken()).enqueue(new Callback<AccessToken>() {
                 @Override
                 public void onResponse(@NonNull Call<AccessToken> call, @NonNull Response<AccessToken> response) {
-                    Log.i(NETWORK_TAG,response.toString());
-                    if (loginModel.getAccessToken() != null) {
-                        getSession();
+                    AccessToken accessToken = response.body();
+                    loginModel.setAccessToken(accessToken);
 
+                    Log.i(NETWORK_TAG,response.toString());
+
+                    if (accessToken != null) {
+                        loginModel.saveDataToDb(AccessToken.TAG,accessToken.getToken());
+                        getSession();
                     }
                 }
 
@@ -143,5 +149,9 @@ public class LoginPresenter {
         });
     }
 
+    public void onDestroy(){
+        loginActivity = null;
+        loginModel = null;
+    }
 
 }

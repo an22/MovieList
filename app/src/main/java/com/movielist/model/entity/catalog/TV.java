@@ -6,7 +6,7 @@ import com.movielist.model.model_interfaces.Describable;
 public class TV implements Describable {
 
     @SerializedName("id")
-    int id;
+    private int id;
 
     @SerializedName("name")
     private String name;
@@ -22,5 +22,10 @@ public class TV implements Describable {
     @Override
     public String getImagePath() {
         return posterPath;
+    }
+
+    @Override
+    public int getID() {
+        return id;
     }
 }

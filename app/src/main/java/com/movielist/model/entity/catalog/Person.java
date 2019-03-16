@@ -29,4 +29,9 @@ public class Person implements Describable {
     public String getImagePath() {
         return profile;
     }
+
+    @Override
+    public int getID() {
+        return id;
+    }
 }

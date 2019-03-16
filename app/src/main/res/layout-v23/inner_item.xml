@@ -13,7 +13,8 @@
         android:scaleType="fitXY"
         android:contentDescription="@string/poster"
         android:focusable="true"
-        android:clickable="true" />
+        android:clickable="true"
+        android:foreground="?selectableItemBackground"/>
 
     <TextView
         android:id="@+id/title"

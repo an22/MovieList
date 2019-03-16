@@ -1,6 +1,7 @@
 package com.movielist.model.entity.catalog;
 
 import com.google.gson.annotations.SerializedName;
+import com.movielist.model.entity.auth.AccessToken;
 
 import java.io.Serializable;
 
@@ -33,7 +34,9 @@ public class User implements Serializable {
     @SerializedName("include_adult")
     private boolean adult;
 
+    private AccessToken mAccessToken;
 
+    //Default user is Guest
     public User(){
         language = "en";
         country = "US";
@@ -43,8 +46,10 @@ public class User implements Serializable {
     }
 
 
+    //This class is inner cuz without user that class is useless
     class Avatar implements Serializable {
 
+        //For more info about gravatar check out https://gravatar.com
         @SerializedName("gravatar")
         private Gravatar gravatar;
 
@@ -65,8 +70,16 @@ public class User implements Serializable {
     }
 
 
-    //-----------------------------------Getter-----------------------------------------------
+    //----------------------------------------------------------------------------------
 
+
+    public AccessToken getAccessToken() {
+        return mAccessToken;
+    }
+
+    public void setAccessToken(AccessToken accessToken) {
+        mAccessToken = accessToken;
+    }
 
     public void setLanguage(String language) {
         this.language = language;
@@ -74,6 +87,10 @@ public class User implements Serializable {
 
     public boolean isGuest() {
         return isGuest;
+    }
+
+    public void setGuest(boolean guest) {
+        isGuest = guest;
     }
 
     public void setCountry(String country) {
@@ -115,6 +132,6 @@ public class User implements Serializable {
     @Override
     @NonNull
     public String toString(){
-        return name + " " + username;
+        return name + " " + username + " " + language;
     }
 }

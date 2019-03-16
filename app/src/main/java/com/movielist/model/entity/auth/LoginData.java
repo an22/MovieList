@@ -74,4 +74,23 @@ public class LoginData implements LoginModel {
             return false;
         }
     }
+
+    @Override
+    public boolean loadAccessTokenFromDb() {
+        try (SQLiteDatabase db = mKeyDbHelper.getReadableDatabase();
+             Cursor cursor = db.rawQuery("SELECT * FROM "
+                     + KeyContract.KeyColumns.TABLE_NAME + " WHERE "
+                     + KeyContract.KeyColumns.COLUMN_NAME_TITLE + "="
+                     + "\"" + AccessToken.TAG + "\"", null)) {
+            cursor.moveToNext();
+            int id = cursor.getColumnIndexOrThrow(KeyContract.KeyColumns.COLUMN_NAME_SUBTITLE);
+            String data = cursor.getString(id);
+            setAccessToken(new AccessToken(data));
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

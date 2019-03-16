@@ -16,7 +16,6 @@ import retrofit2.Response;
 public class TvResult extends Result<TV> {
 
     private static final String TAG = "TV_RESULT";
-    private String currentQuery;
     private TvShows mTvShows;
 
     public TvResult(String language, String region) {
@@ -27,11 +26,7 @@ public class TvResult extends Result<TV> {
     @Override
     public void loadFromQuery(String query) {
         listener.onStart();
-        if(!query.equals(currentQuery)) {
-            resetPage();
-            results.clear();
-            currentQuery = query;
-        }
+        checkQuery(query);
         mTvShows.search(TmdbConstants.keyV3,language,query,currentPage).enqueue(new Callback<TvResult>() {
             @Override
             public void onResponse(@NonNull Call<TvResult> call,@NonNull Response<TvResult> response) {

@@ -32,11 +32,13 @@ public class PersonFragment extends ReceiverFragment {
 
     private static final String TAG = "PERSON_FRAGMENT";
 
+    private static final int spanCount = 2;
+
+    private int count = 0;
+
     private String currentText;
 
     private PersonResult mResult;
-
-    private static final int spanCount = 2;
 
     @BindView(R.id.error_result)
     TextView errorLayout;
@@ -58,16 +60,21 @@ public class PersonFragment extends ReceiverFragment {
         mUnbinder = ButterKnife.bind(this,view);
 
         UINetworkListener listener = new UINetworkListener() {
+
             @Override
             public void onLoaded() {
-                mProgressBar.setVisibility(View.GONE);
-                mRecyclerView.setVisibility(View.VISIBLE);
+                    mProgressBar.setVisibility(View.GONE);
+                    mRecyclerView.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onStart() {
-                mProgressBar.setVisibility(View.VISIBLE);
-                mRecyclerView.setVisibility(View.GONE);
+                count++;
+
+                if(count <= 1) {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    mRecyclerView.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -94,7 +101,9 @@ public class PersonFragment extends ReceiverFragment {
                 mRecyclerView.setAdapter(adapter);
                 mRecyclerView.setOnScrollListener(new LoadMoreListener(mResult,6));
 
-            }else listener.onError(Error.BAD_ARGUMENTS);
+            }else {
+                listener.onError(Error.BAD_ARGUMENTS);
+            }
         }
         else {
             listener.onError(Error.ACTIVITY_NOT_FOUND);
@@ -108,11 +117,10 @@ public class PersonFragment extends ReceiverFragment {
     @Override
     public void onReceive(String data) {
         if(!data.equals(currentText)) {
+            count = 0;
             currentText = data;
             mResult.loadFromQuery(data);
-            if(mRecyclerView.getAdapter().getItemCount()!=0) {
-                mRecyclerView.scrollToPosition(0);
-            }
+            mRecyclerView.scrollToPosition(0);
         }
     }
 

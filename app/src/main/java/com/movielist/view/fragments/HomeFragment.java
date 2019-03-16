@@ -1,5 +1,7 @@
 package com.movielist.view.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,11 +13,9 @@ import android.widget.TextView;
 import com.movielist.R;
 import com.movielist.model.Error;
 import com.movielist.model.entity.Configuration;
-import com.movielist.model.entity.catalog.User;
 import com.movielist.presenter.model_listeners.UINetworkListener;
+import com.movielist.view.activities.CatalogActivity;
 import com.movielist.view.adapters.HomeAdapter;
-
-import java.io.Serializable;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -72,31 +72,20 @@ public class HomeFragment extends Fragment {
             }
         };
 
-        if(getArguments() != null) {
+        if(getArguments() != null && getActivity()!= null) {
+            SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+            HomeAdapter adapter = new HomeAdapter(
+                    getContext(),
+                    listener,
+                    preferences.getString(CatalogActivity.LANGUAGE,"en"),
+                    preferences.getString(CatalogActivity.COUNTRY,"US"),
+                    (Configuration)getArguments().getSerializable(Configuration.TAG));
 
-            Serializable serializableUser = getArguments().getSerializable(User.USER);
-            HomeAdapter adapter;
+            LinearLayoutManager manager = new LinearLayoutManager(getContext());
 
-            User user = (User)serializableUser;
-
-            if(user != null) {
-
-                adapter = new HomeAdapter(
-                        getContext(),
-                        listener,
-                        user.getLanguage(),
-                        user.getCountry(),
-                        (Configuration)getArguments().getSerializable(Configuration.TAG));
-
-                LinearLayoutManager manager = new LinearLayoutManager(getContext());
-                mRecyclerView.setLayoutManager(manager);
-                mRecyclerView.setAdapter(adapter);
-                mRecyclerView.setHasFixedSize(true);
-
-            }
-            else {
-                listener.onError(Error.USER_ERROR);
-            }
+            mRecyclerView.setLayoutManager(manager);
+            mRecyclerView.setAdapter(adapter);
+            mRecyclerView.setHasFixedSize(true);
 
         }
         else listener.onError(Error.BAD_ARGUMENTS);
