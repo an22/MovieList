@@ -28,6 +28,7 @@ public class MoviePresenter {
                 view.addRating(formater.format(model.getRating()));
                 view.setPoster(getPath());
                 view.setRuntime(formatRuntime());
+                view.setImages(model.getImages());
 
             }
 
@@ -52,25 +53,25 @@ public class MoviePresenter {
             genres.append(genre.getName());
             genres.append(", ");
         }
-        genres.deleteCharAt(genres.length() - 1);
-        return genres.toString();
+        if(genres.length() != 0) {
+            genres.delete(genres.length() - 2, genres.length() - 1);
+            return "Genres: " + genres.toString();
+        }
+        return "No genres are set";
     }
 
     private String getPath(){
-        if(mMovieModel.getImages().getBackdrops().length != 0) {
-            return mMovieModel.getImages().getBackdrops()[0].getPosterPath();
-        }
         return mMovieModel.getImagePath();
     }
 
     private String formatRuntime(){
        int runtime =  mMovieModel.getRuntime();
-       String formatted = "";
+       String formatted = " ";
 
        int hours = runtime /60;
        if(hours > 0) formatted = String.valueOf(hours) + " h. ";
 
-       int min = (runtime%60)*100;
+       int min = (runtime%60);
        formatted += String.valueOf(min) + " m.";
 
        return formatted;

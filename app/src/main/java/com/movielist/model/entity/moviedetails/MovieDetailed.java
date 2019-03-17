@@ -64,6 +64,7 @@ public class MovieDetailed implements MovieModel {
                     rating = movieDetailed.rating;
                     mImages = movieDetailed.mImages;
                     mGenres = movieDetailed.mGenres;
+                    runtime = movieDetailed.runtime;
                     listener.onLoaded();
                 }
                 else listener.onError(Error.ACCESS_ERROR);

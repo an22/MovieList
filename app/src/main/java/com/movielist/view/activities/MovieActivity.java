@@ -9,11 +9,14 @@ import com.bumptech.glide.Glide;
 import com.movielist.R;
 import com.movielist.model.entity.Configuration;
 import com.movielist.model.entity.moviedetails.MovieDetailed;
+import com.movielist.model.entity.moviedetails.MovieImages;
 import com.movielist.presenter.activity_presenters.MoviePresenter;
+import com.movielist.view.adapters.ImageAdapter;
 import com.movielist.view.view_interfaces.MovieView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,12 +64,14 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
             mPresenter = new MoviePresenter(String.valueOf(movieID),this,new MovieDetailed());
         }
 
+        images.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        images.setAdapter(new ImageAdapter(this,new MovieImages(),mConfiguration));
+
     }
 
     @OnClick(R.id.back)
     public void backClick(){
         onBackPressed();
-        finish();
     }
     @Override
     public void addRating(String rating) {
@@ -106,6 +111,11 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
     @Override
     public void onStartLoading() {
 
+    }
+
+    @Override
+    public void setImages(MovieImages images) {
+        this.images.swapAdapter(new ImageAdapter(this,images,mConfiguration),true);
     }
 
     @Override

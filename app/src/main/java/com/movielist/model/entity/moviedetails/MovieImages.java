@@ -1,8 +1,5 @@
 package com.movielist.model.entity.moviedetails;
 
-import android.graphics.Bitmap;
-
-import com.bumptech.glide.Glide;
 import com.google.gson.annotations.SerializedName;
 
 public class MovieImages {
@@ -13,7 +10,9 @@ public class MovieImages {
     @SerializedName("posters")
     private Image[] posters;
 
+    public MovieImages(){
 
+    }
 
     public Image[] getBackdrops() {
         return backdrops;
