@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.movielist.R;
 import com.movielist.model.entity.Configuration;
-import com.movielist.model.entity.catalog.DownloadTypes;
+import com.movielist.model.entity.DownloadTypes;
 import com.movielist.model.entity.catalog.MovieResult;
 import com.movielist.presenter.model_listeners.UINetworkListener;
 import com.movielist.view.LoadMoreListener;

@@ -13,7 +13,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TvResult extends Result<TV> {
+public class TvResult extends Result {
 
     private static final String TAG = "TV_RESULT";
     private TvShows mTvShows;

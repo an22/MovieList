@@ -1,30 +1,28 @@
-package com.movielist.model.entity.catalog;
+package com.movielist.model.model_interfaces;
 
 import com.google.gson.annotations.SerializedName;
-import com.movielist.model.model_interfaces.Describable;
 
-public class TV implements Describable {
-
+public class ListInformation {
     @SerializedName("id")
     private int id;
 
-    @SerializedName("name")
+    @SerializedName(value = "title", alternate = {"name"})
     private String name;
 
-    @SerializedName("poster_path")
+    @SerializedName(value = "poster_path", alternate = {"profile_path"})
     private String posterPath;
 
-    @Override
+
     public String getTitle() {
         return name;
     }
 
-    @Override
+
     public String getImagePath() {
         return posterPath;
     }
 
-    @Override
+
     public int getID() {
         return id;
     }

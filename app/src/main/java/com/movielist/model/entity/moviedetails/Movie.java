@@ -15,9 +15,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MovieDetailed implements MovieModel {
+public class Movie implements MovieModel {
 
-    public static final String TAG = "MovieDetailed";
+    public static final String TAG = "Movie";
 
     @SerializedName("poster_path")
     private String posterPath;
@@ -43,7 +43,7 @@ public class MovieDetailed implements MovieModel {
     @SerializedName("runtime")
     private int runtime;
 
-    public MovieDetailed(){
+    public Movie(){
 
     }
 
@@ -51,27 +51,27 @@ public class MovieDetailed implements MovieModel {
     public void loadMovie(String movieID, UINetworkListener listener) {
         listener.onStart();
         Movies movies = RetrofitSingleton.getInstance().getRetrofit().create(Movies.class);
-        movies.getDetails(movieID, TmdbConstants.keyV3,"images","en").enqueue(new Callback<MovieDetailed>() {
+        movies.getDetails(movieID, TmdbConstants.keyV3,"images","en").enqueue(new Callback<Movie>() {
             @Override
-            public void onResponse(@NonNull Call<MovieDetailed> call,@NonNull Response<MovieDetailed> response) {
-                MovieDetailed movieDetailed = response.body();
+            public void onResponse(@NonNull Call<Movie> call, @NonNull Response<Movie> response) {
+                Movie movie = response.body();
                 Log.i(TAG,response.toString());
-                if(movieDetailed != null){
-                    posterPath = movieDetailed.posterPath;
-                    id = movieDetailed.id;
-                    title = movieDetailed.title;
-                    description = movieDetailed.description;
-                    rating = movieDetailed.rating;
-                    mImages = movieDetailed.mImages;
-                    mGenres = movieDetailed.mGenres;
-                    runtime = movieDetailed.runtime;
+                if(movie != null){
+                    posterPath = movie.posterPath;
+                    id = movie.id;
+                    title = movie.title;
+                    description = movie.description;
+                    rating = movie.rating;
+                    mImages = movie.mImages;
+                    mGenres = movie.mGenres;
+                    runtime = movie.runtime;
                     listener.onLoaded();
                 }
                 else listener.onError(Error.ACCESS_ERROR);
             }
 
             @Override
-            public void onFailure(@NonNull Call<MovieDetailed> call,@NonNull Throwable t) {
+            public void onFailure(@NonNull Call<Movie> call, @NonNull Throwable t) {
                 Log.e(TAG,t.toString());
                 listener.onError(t.getMessage());
             }

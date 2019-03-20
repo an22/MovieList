@@ -49,7 +49,6 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
         setContentView(R.layout.activity_catalog);
         ButterKnife.bind(this);
 
-
         Bundle extra = getIntent().getExtras();
         if(extra != null){
             String session = extra.getString(KeyDbHelper.SESSION);

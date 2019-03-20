@@ -12,8 +12,9 @@ import android.widget.TextView;
 
 import com.movielist.R;
 import com.movielist.model.Error;
+import com.movielist.model.ResultTypes;
 import com.movielist.model.entity.Configuration;
-import com.movielist.model.entity.catalog.PersonResult;
+import com.movielist.model.entity.Result;
 import com.movielist.presenter.model_listeners.UINetworkListener;
 import com.movielist.view.LoadMoreListener;
 import com.movielist.view.activities.CatalogActivity;
@@ -28,17 +29,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class PersonFragment extends ReceiverFragment {
+public class ResultFragment extends ReceiverFragment {
 
-    private static final String TAG = "PERSON_FRAGMENT";
+    private static final String TAG = "MOVIE_FRAGMENT";
 
-    private static final int spanCount = 2;
+    private Result mResult;
 
-    private int count = 0;
+    private int count;
 
     private String currentText;
 
-    private PersonResult mResult;
+    private static final int spanCount = 2;
 
     @BindView(R.id.error_result)
     TextView errorLayout;
@@ -56,15 +57,13 @@ public class PersonFragment extends ReceiverFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_result,container,false);
-
         mUnbinder = ButterKnife.bind(this,view);
 
         UINetworkListener listener = new UINetworkListener() {
-
             @Override
             public void onLoaded() {
-                    mProgressBar.setVisibility(View.GONE);
-                    mRecyclerView.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -94,16 +93,15 @@ public class PersonFragment extends ReceiverFragment {
             String language = preferences.getString(CatalogActivity.LANGUAGE,"en");
             String country = preferences.getString(CatalogActivity.COUNTRY,"US");
             if(getArguments() != null) {
-                mResult = new PersonResult(language, country);
+                mResult = Result.createResult((ResultTypes)getArguments().getSerializable(Result.TYPE),language,country);
                 InnerHomeAdapter adapter = new InnerHomeAdapter(getContext(), mResult, listener);
                 adapter.setConfiguration((Configuration)getArguments().getSerializable(Configuration.TAG));
                 mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCount));
                 mRecyclerView.setAdapter(adapter);
                 mRecyclerView.setOnScrollListener(new LoadMoreListener(mResult,6));
+                mRecyclerView.setHasFixedSize(true);
 
-            }else {
-                listener.onError(Error.BAD_ARGUMENTS);
-            }
+            }else listener.onError(Error.BAD_ARGUMENTS);
         }
         else {
             listener.onError(Error.ACTIVITY_NOT_FOUND);
@@ -112,8 +110,6 @@ public class PersonFragment extends ReceiverFragment {
     }
 
 
-    //If query != current query we load data
-    //It helps to avoid repeating requests
     @Override
     public void onReceive(String data) {
         if(!data.equals(currentText)) {
@@ -129,5 +125,4 @@ public class PersonFragment extends ReceiverFragment {
         super.onDestroyView();
         mUnbinder.unbind();
     }
-
 }

@@ -1,6 +1,8 @@
 package com.movielist.view.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +12,13 @@ import com.bumptech.glide.Glide;
 import com.movielist.R;
 import com.movielist.model.entity.Configuration;
 import com.movielist.model.entity.moviedetails.MovieImages;
+import com.movielist.view.activities.FullScreenImageActivity;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
@@ -71,6 +75,21 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
                                 mImages.getPosters()[position].getPosterPath())
                         .into(mImageView);
             }
+        }
+
+        @OnClick(R.id.poster)
+        void posterClick(){
+            Intent intent = new Intent(mContext, FullScreenImageActivity.class);
+            Bundle imageExtras = new Bundle();
+            if(mImages.getBackdrops().length != 0) {
+                imageExtras.putStringArray(MovieImages.TAG,mImages.toBackdropsStringArray(mConfiguration));
+            }
+            else{
+                imageExtras.putStringArray(MovieImages.TAG,mImages.toPostersStringArray(mConfiguration));
+            }
+            imageExtras.putInt("pos", getLayoutPosition());
+            intent.putExtras(imageExtras);
+            mContext.startActivity(intent);
         }
     }
 }

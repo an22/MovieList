@@ -15,7 +15,9 @@ import android.widget.TextView;
 import com.google.android.material.tabs.TabLayout;
 import com.movielist.R;
 import com.movielist.model.Error;
+import com.movielist.model.ResultTypes;
 import com.movielist.model.entity.Configuration;
+import com.movielist.model.entity.Result;
 import com.movielist.presenter.model_listeners.Sender;
 import com.movielist.view.adapters.SearchResultAdapter;
 
@@ -59,34 +61,31 @@ public class SearchFragment extends Fragment implements Sender {
         pager.setAdapter(adapter);
         tabsLayout.setupWithViewPager(pager);
 
-        MovieFragment movieFragment = new MovieFragment();
-        PersonFragment personFragment = new PersonFragment();
-        TvFragment tvFragment = new TvFragment();
-        Bundle args = new Bundle();
 
         if (getArguments() != null) {
-            args.putSerializable(Configuration.TAG, getArguments().getSerializable(Configuration.TAG));
-            movieFragment.setArguments(args);
-            personFragment.setArguments(args);
-            tvFragment.setArguments(args);
+            for(ResultTypes type:ResultTypes.values()){
+                Bundle args = new Bundle();
+                args.putSerializable(Configuration.TAG,getArguments().getSerializable(Configuration.TAG));
+                args.putSerializable(Result.TYPE,type);
+                ResultFragment fragment = new ResultFragment();
+                fragment.setArguments(args);
+                adapter.addFragment(fragment,type.getName());
+            }
+
+            pager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
+                @Override
+                public void onPageSelected(int position){
+                    if(searchField.getText().length() != 0){
+                        adapter.getItem(position).onReceive(String.valueOf(searchField.getText()));
+                    }
+                }
+            });
+
+            pager.setOffscreenPageLimit(adapter.getCount());
+
         }else{
             Log.e(TAG, Error.BAD_ARGUMENTS);
         }
-
-        adapter.addFragment(movieFragment,"Movies");
-        adapter.addFragment(personFragment,"People");
-        adapter.addFragment(tvFragment,"TV");
-
-        pager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
-             @Override
-             public void onPageSelected(int position){
-                 if(searchField.getText().length() != 0){
-                     adapter.getItem(position).onReceive(String.valueOf(searchField.getText()));
-                 }
-             }
-        });
-
-        pager.setOffscreenPageLimit(adapter.getCount());
         return view;
     }
 

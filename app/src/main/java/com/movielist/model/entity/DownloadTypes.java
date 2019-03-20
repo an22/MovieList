@@ -1,4 +1,4 @@
-package com.movielist.model.entity.catalog;
+package com.movielist.model.entity;
 
 
 //States of MovieResult Object

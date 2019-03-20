@@ -16,8 +16,7 @@ import com.bumptech.glide.Glide;
 import com.movielist.R;
 import com.movielist.model.entity.Configuration;
 import com.movielist.model.entity.Result;
-import com.movielist.model.entity.moviedetails.MovieDetailed;
-import com.movielist.model.model_interfaces.Describable;
+import com.movielist.model.entity.moviedetails.Movie;
 import com.movielist.presenter.model_listeners.UINetworkListener;
 import com.movielist.view.activities.MovieActivity;
 
@@ -29,12 +28,12 @@ import butterknife.OnClick;
 
 public class InnerHomeAdapter extends RecyclerView.Adapter<InnerHomeAdapter.InnerViewHolder> {
 
-    private Result<? extends Describable> result;
+    private Result result;
     private Configuration mConfiguration;
     private Context mContext;
 
 
-    public InnerHomeAdapter(Context context, Result<? extends Describable> result, UINetworkListener listener) {
+    public InnerHomeAdapter(Context context, Result result, UINetworkListener listener) {
         this.result = result;
         result.setListener(new UINetworkListener() {
             @Override
@@ -115,7 +114,7 @@ public class InnerHomeAdapter extends RecyclerView.Adapter<InnerHomeAdapter.Inne
 
             Bundle arguments = new Bundle();
             arguments.putSerializable(Configuration.TAG,mConfiguration);
-            arguments.putInt(MovieDetailed.TAG,result.getResults().get(getLayoutPosition()).getID());
+            arguments.putInt(Movie.TAG,result.getResults().get(getLayoutPosition()).getID());
             Intent movieActivity = new Intent(mContext, MovieActivity.class);
 
             movieActivity.putExtras(arguments);

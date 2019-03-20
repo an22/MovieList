@@ -6,9 +6,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.movielist.R;
 import com.movielist.model.entity.Configuration;
-import com.movielist.model.entity.moviedetails.MovieDetailed;
+import com.movielist.model.entity.moviedetails.Movie;
 import com.movielist.model.entity.moviedetails.MovieImages;
 import com.movielist.presenter.activity_presenters.MoviePresenter;
 import com.movielist.view.adapters.ImageAdapter;
@@ -48,6 +49,9 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
     @BindView(R.id.runtime)
     TextView runtime;
 
+    @BindView(R.id.floatingButton)
+    FloatingActionButton mFloatingActionButton;
+
     private Configuration mConfiguration;
     private MoviePresenter mPresenter;
 
@@ -59,9 +63,9 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
         Bundle extras = getIntent().getExtras();
 
         if(extras != null){
-            int movieID = extras.getInt(MovieDetailed.TAG);
+            int movieID = extras.getInt(Movie.TAG);
             mConfiguration = (Configuration)extras.getSerializable(Configuration.TAG);
-            mPresenter = new MoviePresenter(String.valueOf(movieID),this,new MovieDetailed());
+            mPresenter = new MoviePresenter(String.valueOf(movieID),this,new Movie());
         }
 
         images.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
@@ -73,6 +77,7 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
     public void backClick(){
         onBackPressed();
     }
+
     @Override
     public void addRating(String rating) {
         this.rating.setText(rating);

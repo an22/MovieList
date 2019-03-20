@@ -1,22 +1,27 @@
 package com.movielist.model.entity;
 
 import com.google.gson.annotations.SerializedName;
-import com.movielist.model.model_interfaces.Describable;
+import com.movielist.model.ResultTypes;
+import com.movielist.model.entity.catalog.MovieResult;
+import com.movielist.model.entity.catalog.PersonResult;
+import com.movielist.model.entity.catalog.TvResult;
+import com.movielist.model.model_interfaces.ListInformation;
 import com.movielist.model.model_interfaces.Loadable;
 import com.movielist.presenter.model_listeners.UINetworkListener;
 
 import java.util.ArrayList;
 
-public abstract class Result<T extends Describable> implements Loadable {
+public abstract class Result implements Loadable {
 
     public static final String TAG = "Result";
+    public static final String TYPE = "Type";
     protected static String NETWORK_TAG = "Network";
 
     @SerializedName("page")
     protected int currentPage;
 
     @SerializedName("results")
-    private ArrayList<T> results;
+    private ArrayList<ListInformation> results;
 
     @SerializedName("total_pages")
     private int pages;
@@ -39,9 +44,7 @@ public abstract class Result<T extends Describable> implements Loadable {
 
     public abstract void loadFromQuery(String query);
 
-    //Generic method
-    //We can`t use Result<T> because possible lose of data
-    protected <V extends Result<T>> void add( V result){
+    protected  void add(Result result){
         results.addAll(result.getResults());
         pages = result.getPages();
     }
@@ -62,11 +65,11 @@ public abstract class Result<T extends Describable> implements Loadable {
         this.listener = listener;
     }
 
-    public ArrayList<T> getResults() {
+    public ArrayList<ListInformation> getResults() {
         return results;
     }
 
-    int getPages() {
+    protected int getPages() {
         return pages;
     }
 
@@ -76,5 +79,20 @@ public abstract class Result<T extends Describable> implements Loadable {
             return true;
         }
         return false;
+    }
+
+    public static Result createResult(ResultTypes type, String language, String region){
+        switch (type){
+            case TV:{
+                return new TvResult(language,region);
+            }
+            case MOVIE: {
+                return new MovieResult(language, region);
+            }
+            case PEOPLE: {
+                return new PersonResult(language, region);
+            }
+            default: throw new IllegalArgumentException("Wrong type:" + type);
+        }
     }
 }
