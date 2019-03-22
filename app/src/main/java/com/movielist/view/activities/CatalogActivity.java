@@ -19,6 +19,7 @@ import com.movielist.view.fragments.HomeFragment;
 import com.movielist.view.fragments.SearchFragment;
 import com.movielist.view.view_interfaces.CatalogView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
@@ -50,14 +51,25 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
         ButterKnife.bind(this);
 
         Bundle extra = getIntent().getExtras();
+
         if(extra != null){
             String session = extra.getString(KeyDbHelper.SESSION);
             if(session == null){
                 session = extra.getString(KeyDbHelper.GUEST_SESSION);
             }
+
             CatalogData data = new CatalogData();
+
             mPresenter = new CatalogPresenter(this,data);
-            mPresenter.loadUser(session,this);
+
+            if(savedInstanceState == null) {
+                mPresenter.loadConfig();
+                mPresenter.loadUser(session, this);
+            }else{
+                mPresenter.setConfiguration(savedInstanceState.getSerializable(Configuration.TAG));
+                mPresenter.setUser(savedInstanceState.getSerializable(User.USER));
+            }
+
         }
         else {
             onError(Error.USER_ERROR);
@@ -86,6 +98,12 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
 
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putSerializable(User.USER,mPresenter.getUser());
+        outState.putSerializable(Configuration.TAG,mPresenter.getConfiguration());
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     public void saveLanguage(){
@@ -109,16 +127,18 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
 
     @Override
     public void runHome(Configuration configuration) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(Configuration.TAG,configuration);
-        fragment.setArguments(args);
-        errorLayout.setVisibility(View.GONE);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container,fragment)
-                .addToBackStack(null)
-                .commit();
+        if(!isFinishing()&&!isDestroyed()) {
+            HomeFragment fragment = new HomeFragment();
+            Bundle args = new Bundle();
+            args.putSerializable(Configuration.TAG, configuration);
+            fragment.setArguments(args);
+            errorLayout.setVisibility(View.GONE);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.container, fragment)
+                    .addToBackStack(HomeFragment.TAG)
+                    .commit();
+        }
     }
 
     @Override

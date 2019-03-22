@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
 
@@ -28,7 +27,6 @@ public class FullScreenImageAdapter extends PagerAdapter {
         ImageView imageView = new ImageView(mContext);
         imageView.setPadding(0,0,0,0);
         imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-
         Glide.with(mContext).load(imageURL[0] + imageURL[1] + imageURL[position + 2]).into(imageView);
         container.addView(imageView,0);
         return imageView;

@@ -78,8 +78,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeHolder> {
             super(itemView);
 
             ButterKnife.bind(this,itemView);
-
-
             LinearLayoutManager manager = new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false);
 
             result = new MovieResult(language,country);

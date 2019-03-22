@@ -69,7 +69,7 @@ public abstract class Result implements Loadable {
         return results;
     }
 
-    protected int getPages() {
+    private int getPages() {
         return pages;
     }
 
@@ -81,13 +81,14 @@ public abstract class Result implements Loadable {
         return false;
     }
 
+    //This is example of design pattern 'Factory'
     public static Result createResult(ResultTypes type, String language, String region){
         switch (type){
             case TV:{
                 return new TvResult(language,region);
             }
             case MOVIE: {
-                return new MovieResult(language, region);
+                return new MovieResult(language, region,DownloadTypes.QUERY);
             }
             case PEOPLE: {
                 return new PersonResult(language, region);

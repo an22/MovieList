@@ -2,6 +2,7 @@ package com.movielist.view.activities;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import com.movielist.view.view_interfaces.MovieView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -60,6 +62,7 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
         ButterKnife.bind(this);
+
         Bundle extras = getIntent().getExtras();
 
         if(extras != null){
@@ -74,7 +77,7 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
     }
 
     @OnClick(R.id.back)
-    public void backClick(){
+    void backClick(){
         onBackPressed();
     }
 
@@ -131,6 +134,17 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
     @Override
     public void onError() {
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:{
+                onBackPressed();
+                return true;
+            }
+            default: return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

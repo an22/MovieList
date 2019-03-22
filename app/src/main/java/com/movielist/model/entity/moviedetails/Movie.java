@@ -43,6 +43,7 @@ public class Movie implements MovieModel {
     @SerializedName("runtime")
     private int runtime;
 
+
     public Movie(){
 
     }

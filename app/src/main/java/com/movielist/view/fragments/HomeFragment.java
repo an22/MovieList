@@ -28,7 +28,7 @@ import butterknife.Unbinder;
 
 public class HomeFragment extends Fragment {
 
-    private static final String TAG = "HOME_FRAGMENT";
+    public static final String TAG = "HOME_FRAGMENT";
 
     @BindView(R.id.home_rv)
     RecyclerView mRecyclerView;
@@ -93,6 +93,10 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     public void onDestroyView() {

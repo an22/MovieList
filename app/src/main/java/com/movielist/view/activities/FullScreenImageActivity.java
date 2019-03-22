@@ -1,10 +1,13 @@
 package com.movielist.view.activities;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import com.movielist.R;
+import com.movielist.model.CapturePhotoUtils;
 import com.movielist.model.entity.moviedetails.MovieImages;
 import com.movielist.view.adapters.FullScreenImageAdapter;
 
@@ -55,6 +58,9 @@ public class FullScreenImageActivity extends AppCompatActivity {
         switch (item.getItemId())
         {
             case R.id.save:
+                ImageView imageView = (ImageView)pager.getChildAt(pager.getCurrentItem());
+                Bitmap imageBitmap = CapturePhotoUtils.drawableToBitmap(imageView.getDrawable());
+                CapturePhotoUtils.insertImage(getContentResolver(),imageBitmap,"image" + pager.getCurrentItem(),null,this);
                 return true;
             case android.R.id.home:
                 onBackPressed();

@@ -9,11 +9,14 @@ import com.movielist.database.KeyContract;
 import com.movielist.database.KeyDbHelper;
 import com.movielist.model.Error;
 import com.movielist.model.TmdbConstants;
+import com.movielist.model.entity.Configuration;
 import com.movielist.model.entity.auth.AccessToken;
 import com.movielist.model.model_interfaces.CatalogModel;
 import com.movielist.model.network.RetrofitSingleton;
+import com.movielist.model.network.requests.GetImageCfg;
 import com.movielist.model.network.requests.GetUserDetails;
 import com.movielist.presenter.model_listeners.GuestListener;
+import com.movielist.presenter.model_listeners.UINetworkListener;
 
 import androidx.annotation.NonNull;
 import retrofit2.Call;
@@ -25,6 +28,7 @@ public class CatalogData implements CatalogModel {
     private static final String TAG = "CATALOG_DATA";
 
     private User user;
+    private Configuration mConfiguration;
 
     @Override
     public User getUser() {
@@ -65,6 +69,38 @@ public class CatalogData implements CatalogModel {
             }
         });
 
+    }
+
+    @Override
+    public void loadConfig(UINetworkListener listener){
+        GetImageCfg cfg = RetrofitSingleton.getInstance().getRetrofit().create(GetImageCfg.class);
+        cfg.getCfg(TmdbConstants.keyV3).enqueue(new Callback<Configuration>() {
+            @Override
+            public void onResponse(@NonNull Call<Configuration> call, @NonNull Response<Configuration> response) {
+                Configuration config = response.body();
+                Log.i(TAG,response.toString());
+                if(config != null){
+                    mConfiguration = config;
+                    listener.onLoaded();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Configuration> call,@NonNull Throwable t) {
+                listener.onError(t.getMessage());
+                Log.e(TAG, Error.NETWORK_ERROR);
+            }
+        });
+    }
+
+    @Override
+    public Configuration getConfig() {
+        return mConfiguration;
+    }
+
+    @Override
+    public void setConfig(Configuration config) {
+        mConfiguration = config;
     }
 
     private boolean loadAccessTokenFromDb(Context context){

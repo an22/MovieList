@@ -2,7 +2,9 @@ package com.movielist.model.entity.auth;
 
 import com.google.gson.annotations.SerializedName;
 
-public class AccessToken {
+import java.io.Serializable;
+
+public class AccessToken implements Serializable {
 
     public static String TAG = "AccessToken";
 
