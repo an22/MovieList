@@ -29,6 +29,8 @@ public class MoviePresenter {
                 view.setPoster(getPath());
                 view.setRuntime(formatRuntime());
                 view.setImages(model.getImages());
+                view.setCredits(model.getCredits());
+                view.show();
 
             }
 
@@ -75,6 +77,10 @@ public class MoviePresenter {
        formatted += String.valueOf(min) + " m.";
 
        return formatted;
+    }
+
+    public void rate(int rating, String session){
+        mMovieModel.rate(rating, session);
     }
 
     public void onDestroy(){

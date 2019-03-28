@@ -43,6 +43,8 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
     @BindView(R.id.progress)
     ProgressBar mProgressBar;
 
+    private String session;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +55,7 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
         Bundle extra = getIntent().getExtras();
 
         if(extra != null){
-            String session = extra.getString(KeyDbHelper.SESSION);
+            session = extra.getString(KeyDbHelper.SESSION);
             if(session == null){
                 session = extra.getString(KeyDbHelper.GUEST_SESSION);
             }
@@ -143,18 +145,20 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
 
     @Override
     public void runSearch(Configuration configuration) {
-
-        SearchFragment fragment = new SearchFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(Configuration.TAG,configuration);
-        fragment.setArguments(args);
-        errorLayout.setVisibility(View.GONE);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container,fragment)
-                .addToBackStack(null)
-                .commit();
+        if(!isFinishing()&&!isDestroyed()) {
+            SearchFragment fragment = new SearchFragment();
+            Bundle args = new Bundle();
+            args.putSerializable(Configuration.TAG, configuration);
+            fragment.setArguments(args);
+            errorLayout.setVisibility(View.GONE);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
+
 
     @Override
     public void onError(String message) {

@@ -8,7 +8,7 @@ import android.widget.ImageView;
 
 import com.movielist.R;
 import com.movielist.model.CapturePhotoUtils;
-import com.movielist.model.entity.moviedetails.MovieImages;
+import com.movielist.model.entity.ImagePaths;
 import com.movielist.view.adapters.FullScreenImageAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,7 +33,7 @@ public class FullScreenImageActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if(extras != null){
-            String[] images = extras.getStringArray(MovieImages.TAG);
+            String[] images = extras.getStringArray(ImagePaths.TAG);
             int pos = extras.getInt("pos");
             FullScreenImageAdapter adapter = new FullScreenImageAdapter(images,this);
             pager.setAdapter(adapter);

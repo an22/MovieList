@@ -3,32 +3,45 @@ package com.movielist.view.activities;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.movielist.R;
+import com.movielist.database.KeyDbHelper;
+import com.movielist.model.RateDialog;
 import com.movielist.model.entity.Configuration;
+import com.movielist.model.entity.moviedetails.Credits;
 import com.movielist.model.entity.moviedetails.Movie;
-import com.movielist.model.entity.moviedetails.MovieImages;
+import com.movielist.model.entity.ImagePaths;
 import com.movielist.presenter.activity_presenters.MoviePresenter;
+import com.movielist.view.RateListener;
 import com.movielist.view.adapters.ImageAdapter;
+import com.movielist.view.adapters.PersonAdapter;
 import com.movielist.view.view_interfaces.MovieView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MovieActivity extends AppCompatActivity implements MovieView {
+public class MovieActivity extends AppCompatActivity implements MovieView, RateListener {
 
     @BindView(R.id.poster)
     ImageView poster;
+
+    @BindView(R.id.scroll_view)
+    ScrollView mScrollView;
+
+    @BindView(R.id.progress_bar)
+    ProgressBar mProgressBar;
 
     @BindView(R.id.back)
     ImageView backIcon;
@@ -51,11 +64,15 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
     @BindView(R.id.runtime)
     TextView runtime;
 
+    @BindView(R.id.credits)
+    RecyclerView mCredits;
+
     @BindView(R.id.floatingButton)
     FloatingActionButton mFloatingActionButton;
 
     private Configuration mConfiguration;
     private MoviePresenter mPresenter;
+    private String session;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,13 +84,22 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
 
         if(extras != null){
             int movieID = extras.getInt(Movie.TAG);
+            session = extras.getString(KeyDbHelper.SESSION);
             mConfiguration = (Configuration)extras.getSerializable(Configuration.TAG);
             mPresenter = new MoviePresenter(String.valueOf(movieID),this,new Movie());
         }
 
         images.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
-        images.setAdapter(new ImageAdapter(this,new MovieImages(),mConfiguration));
+        images.setAdapter(new ImageAdapter(this,new ImagePaths(),mConfiguration));
 
+        mCredits.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        images.setAdapter(new PersonAdapter(this,mConfiguration, new Credits().mCasts));
+
+    }
+
+    private void showDialog(){
+        RateDialog rateDialog = new RateDialog();
+        rateDialog.show(getSupportFragmentManager(),"RateDialog");
     }
 
     @OnClick(R.id.back)
@@ -81,6 +107,10 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
         onBackPressed();
     }
 
+    @OnClick(R.id.floatingButton)
+    void rateClick(){
+        showDialog();
+    }
     @Override
     public void addRating(String rating) {
         this.rating.setText(rating);
@@ -118,11 +148,13 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
 
     @Override
     public void onStartLoading() {
-
+        mProgressBar.setVisibility(View.VISIBLE);
+        mFloatingActionButton.setVisibility(View.GONE);
+        mScrollView.setVisibility(View.GONE);
     }
 
     @Override
-    public void setImages(MovieImages images) {
+    public void setImages(ImagePaths images) {
         this.images.swapAdapter(new ImageAdapter(this,images,mConfiguration),true);
     }
 
@@ -132,8 +164,20 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
     }
 
     @Override
+    public void setCredits(Credits credits) {
+            this.mCredits.swapAdapter(new PersonAdapter(this,mConfiguration,credits.mCasts),true);
+    }
+
+    @Override
     public void onError() {
 
+    }
+
+    @Override
+    public void show() {
+        mProgressBar.setVisibility(View.GONE);
+        mFloatingActionButton.setVisibility(View.VISIBLE);
+        mScrollView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -151,5 +195,10 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.onDestroy();
+    }
+
+    @Override
+    public void rate(int rating) {
+        mPresenter.rate(rating, session);
     }
 }

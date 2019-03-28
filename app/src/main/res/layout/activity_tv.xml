@@ -58,17 +58,6 @@
                     android:textSize="20sp"
                     android:layout_gravity="bottom|start"/>
 
-                <TextView
-                    android:id="@+id/runtime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|center"
-                    android:layout_marginBottom="16dp"
-                    android:drawableStart="@drawable/ic_length_white_24dp"
-                    android:textSize="18sp"
-                    android:drawablePadding="4dp"
-                    android:textAlignment="center" />
-
             </FrameLayout>
 
             <TextView
@@ -106,7 +95,7 @@
                 android:textSize="16sp"/>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/credits"
+                android:id="@+id/cast"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"

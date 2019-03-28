@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.movielist.R;
 import com.movielist.model.entity.Configuration;
-import com.movielist.model.entity.moviedetails.MovieImages;
+import com.movielist.model.entity.ImagePaths;
 import com.movielist.view.activities.FullScreenImageActivity;
 
 import androidx.annotation.NonNull;
@@ -23,10 +23,10 @@ import butterknife.OnClick;
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
     private Context mContext;
-    private MovieImages mImages;
+    private ImagePaths mImages;
     private Configuration mConfiguration;
 
-    public ImageAdapter(Context context, MovieImages images, Configuration configuration){
+    public ImageAdapter(Context context, ImagePaths images, Configuration configuration){
         mContext = context;
         mImages = images;
         mConfiguration = configuration;
@@ -82,10 +82,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
             Intent intent = new Intent(mContext, FullScreenImageActivity.class);
             Bundle imageExtras = new Bundle();
             if(mImages.getBackdrops().length != 0) {
-                imageExtras.putStringArray(MovieImages.TAG,mImages.toBackdropsStringArray(mConfiguration));
+                imageExtras.putStringArray(ImagePaths.TAG,mImages.toBackdropsStringArray(mConfiguration));
             }
             else{
-                imageExtras.putStringArray(MovieImages.TAG,mImages.toPostersStringArray(mConfiguration));
+                imageExtras.putStringArray(ImagePaths.TAG,mImages.toPostersStringArray(mConfiguration));
             }
             imageExtras.putInt("pos", getLayoutPosition());
             intent.putExtras(imageExtras);

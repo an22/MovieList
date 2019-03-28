@@ -5,10 +5,13 @@ import android.util.Log;
 import com.google.gson.annotations.SerializedName;
 import com.movielist.model.Error;
 import com.movielist.model.TmdbConstants;
+import com.movielist.model.entity.ImagePaths;
 import com.movielist.model.model_interfaces.MovieModel;
 import com.movielist.model.network.RetrofitSingleton;
 import com.movielist.model.network.requests.Movies;
 import com.movielist.presenter.model_listeners.UINetworkListener;
+
+import java.io.IOException;
 
 import androidx.annotation.NonNull;
 import retrofit2.Call;
@@ -35,7 +38,7 @@ public class Movie implements MovieModel {
     private double rating;
 
     @SerializedName("images")
-    private MovieImages mImages;
+    private ImagePaths mImages;
 
     @SerializedName("genres")
     private Genre[] mGenres;
@@ -43,16 +46,19 @@ public class Movie implements MovieModel {
     @SerializedName("runtime")
     private int runtime;
 
+    @SerializedName("credits")
+    private Credits mCredits;
+
+    private Movies mMovieRequests;
 
     public Movie(){
-
+        mMovieRequests = RetrofitSingleton.getInstance().getRetrofit().create(Movies.class);
     }
 
     @Override
     public void loadMovie(String movieID, UINetworkListener listener) {
         listener.onStart();
-        Movies movies = RetrofitSingleton.getInstance().getRetrofit().create(Movies.class);
-        movies.getDetails(movieID, TmdbConstants.keyV3,"images","en").enqueue(new Callback<Movie>() {
+        mMovieRequests.getDetails(movieID, TmdbConstants.keyV3,"images,credits","en").enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(@NonNull Call<Movie> call, @NonNull Response<Movie> response) {
                 Movie movie = response.body();
@@ -66,6 +72,7 @@ public class Movie implements MovieModel {
                     mImages = movie.mImages;
                     mGenres = movie.mGenres;
                     runtime = movie.runtime;
+                    mCredits = movie.mCredits;
                     listener.onLoaded();
                 }
                 else listener.onError(Error.ACCESS_ERROR);
@@ -77,6 +84,11 @@ public class Movie implements MovieModel {
                 listener.onError(t.getMessage());
             }
         });
+    }
+
+    @Override
+    public Credits getCredits() {
+        return mCredits;
     }
 
     @Override
@@ -105,13 +117,22 @@ public class Movie implements MovieModel {
     }
 
     @Override
-    public MovieImages getImages() {
+    public ImagePaths getImages() {
         return mImages;
     }
 
     @Override
     public int getRuntime(){
         return runtime;
+    }
+
+    @Override
+    public void rate(int rating,String session) {
+        try {
+            mMovieRequests.rate(String.valueOf(id),TmdbConstants.keyV3,session,rating).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

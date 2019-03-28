@@ -1,9 +1,8 @@
-package com.movielist.model.entity.moviedetails;
+package com.movielist.model.entity;
 
 import com.google.gson.annotations.SerializedName;
-import com.movielist.model.entity.Configuration;
 
-public class MovieImages {
+public class ImagePaths {
 
     public static final String TAG = "IMAGES";
 
@@ -13,7 +12,7 @@ public class MovieImages {
     @SerializedName("posters")
     private Image[] posters;
 
-    public MovieImages(){
+    public ImagePaths(){
 
     }
 
