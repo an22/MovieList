@@ -94,7 +94,11 @@ public class ResultFragment extends ReceiverFragment {
             String language = preferences.getString(CatalogActivity.LANGUAGE,"en");
             String country = preferences.getString(CatalogActivity.COUNTRY,"US");
             if(getArguments() != null) {
-                mResult = Result.createResult((ResultTypes)getArguments().getSerializable(Result.TYPE),language,country);
+                if(savedInstanceState != null && savedInstanceState.getSerializable(Result.TAG) != null){
+                    mResult = (Result)savedInstanceState.getSerializable(Result.TAG);
+                }else {
+                    mResult = Result.createResult((ResultTypes) getArguments().getSerializable(Result.TYPE), language, country);
+                }
                 InnerHomeAdapter adapter = new InnerHomeAdapter(getContext(), mResult, listener,getArguments().getString(KeyDbHelper.SESSION));
                 adapter.setConfiguration((Configuration)getArguments().getSerializable(Configuration.TAG));
                 mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCount));
@@ -110,6 +114,11 @@ public class ResultFragment extends ReceiverFragment {
         return view;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putSerializable(Result.TAG,mResult);
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     public void onReceive(String data) {

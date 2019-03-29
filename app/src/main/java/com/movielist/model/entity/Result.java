@@ -9,9 +9,10 @@ import com.movielist.model.model_interfaces.ListInformation;
 import com.movielist.model.model_interfaces.Loadable;
 import com.movielist.presenter.model_listeners.UINetworkListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class Result implements Loadable {
+public abstract class Result implements Loadable, Serializable {
 
     public static final String TAG = "Result";
     public static final String TYPE = "Type";

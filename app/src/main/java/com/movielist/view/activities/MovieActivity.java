@@ -75,6 +75,7 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
     private Configuration mConfiguration;
     private MoviePresenter mPresenter;
     private String session;
+    private boolean isRated;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,7 +98,12 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
         mCredits.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
         images.setAdapter(new PersonAdapter(this,mConfiguration, new Credits().mCasts));
         if(savedInstanceState != null){
-            mFloatingActionButton.setImageResource(savedInstanceState.getInt("Resource"));
+            if(savedInstanceState.getBoolean("Resource")) {
+                mFloatingActionButton.setImageResource(R.drawable.ic_star_white_24dp);
+            }
+            else{
+                mFloatingActionButton.setImageResource(R.drawable.ic_star_border_white_24dp);
+            }
         }
 
     }
@@ -187,7 +193,7 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putInt("Resource", mFloatingActionButton.getId());
+        outState.putBoolean("Resource", isRated);
         super.onSaveInstanceState(outState);
     }
 
@@ -212,6 +218,7 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
     public void rate(int rating) {
         mPresenter.rate(rating, session);
         mFloatingActionButton.setImageResource(R.drawable.ic_star_white_24dp);
+        isRated = true;
         Snackbar snackbar = Snackbar.make(mScrollView.getRootView(),"ITEM RATED",Snackbar.LENGTH_LONG);
         snackbar.setAction("DISMISS", v -> snackbar.dismiss())
                 .setActionTextColor(getResources().getColor(R.color.colorAccent))

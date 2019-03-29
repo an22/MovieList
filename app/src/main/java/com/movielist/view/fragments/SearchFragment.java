@@ -20,6 +20,7 @@ import com.movielist.model.entity.Configuration;
 import com.movielist.model.entity.Result;
 import com.movielist.presenter.model_listeners.Sender;
 import com.movielist.view.adapters.SearchResultAdapter;
+import com.movielist.view.view_interfaces.ReceiverFragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,7 +55,6 @@ public class SearchFragment extends Fragment implements Sender {
 
         View view = inflater.inflate(R.layout.fragment_search,container,false);
 
-
         mUnbinder = ButterKnife.bind(this,view);
 
         adapter = new SearchResultAdapter(getChildFragmentManager());
@@ -62,7 +62,7 @@ public class SearchFragment extends Fragment implements Sender {
         tabsLayout.setupWithViewPager(pager);
 
 
-        if (getArguments() != null) {
+        if (getArguments() != null ) {
             for(ResultTypes type:ResultTypes.values()){
                 Bundle args = new Bundle();
                 args.putSerializable(Configuration.TAG,getArguments().getSerializable(Configuration.TAG));
@@ -76,7 +76,7 @@ public class SearchFragment extends Fragment implements Sender {
                 @Override
                 public void onPageSelected(int position){
                     if(searchField.getText().length() != 0){
-                        adapter.getItem(position).onReceive(String.valueOf(searchField.getText()));
+                        sendMessage(String.valueOf(searchField.getText()));
                     }
                 }
             });
@@ -121,7 +121,8 @@ public class SearchFragment extends Fragment implements Sender {
     @Override
     public void sendMessage(String data) {
         int pos = tabsLayout.getSelectedTabPosition();
-        adapter.getItem(pos).onReceive(data);
+        Fragment childFragment = (Fragment) adapter.instantiateItem(pager,pos);
+        ((ReceiverFragment) childFragment).onReceive(data);
     }
 
     @Override
