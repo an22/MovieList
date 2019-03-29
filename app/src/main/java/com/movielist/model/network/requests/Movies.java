@@ -2,6 +2,7 @@ package com.movielist.model.network.requests;
 
 import com.movielist.model.entity.catalog.MovieResult;
 import com.movielist.model.entity.moviedetails.Movie;
+import com.movielist.model.network.Rating;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -28,8 +29,8 @@ public interface Movies {
     Call<Movie> getDetails(@Path("movieID") String id, @Query("api_key") String key, @Query("append_to_response")String appendToResponse, @Query("language") String language);
 
     @POST("/3/movie/{movie_id}/rating")
-    Call<Void> rate(@Path("movie_id") String id,@Query("api_key") String key,@Query("session_id") String session,@Body int value);
+    Call<Void> rate(@Path("movie_id") String id,@Query("api_key") String key,@Query("session_id") String session,@Body Rating value);
 
     @POST("/3/movie/{movie_id}/rating")
-    Call<Void> rateGuest(@Path("movie_id") String id,@Query("api_key") String key,@Query("guest_session_id") String session,@Body int value);
+    Call<Void> rateGuest(@Path("movie_id") String id,@Query("api_key") String key,@Query("guest_session_id") String session,@Body Rating value);
 }

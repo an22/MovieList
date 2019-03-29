@@ -28,7 +28,6 @@ public class LogoActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logo);
-
         Handler mHandler = new Handler();  // Handler allows us to do our task after some time
 
         keyHelper = new KeyDbHelper(this); // Database creation if not exist, or binding if exists

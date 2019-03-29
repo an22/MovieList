@@ -31,13 +31,15 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeHolder> {
 
     private String language;
     private String country;
+    private String session;
 
     private UINetworkListener mListener;
 
 
-    public HomeAdapter(Context context, UINetworkListener errorListener, String language, String country, Configuration configuration) {
+    public HomeAdapter(Context context, UINetworkListener errorListener, String language, String country, Configuration configuration,String session) {
         mContext = context;
         mListener = errorListener;
+        this.session = session;
         this.language = language;
         this.country = country;
         this.mConfiguration = configuration;
@@ -81,7 +83,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeHolder> {
             LinearLayoutManager manager = new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false);
 
             result = new MovieResult(language,country);
-            adapter = new InnerHomeAdapter(mContext,result,mListener);
+            adapter = new InnerHomeAdapter(mContext,result,mListener,session);
             mRecyclerView.setLayoutManager(manager);
             mRecyclerView.setAdapter(adapter);
             mRecyclerView.setHasFixedSize(true);

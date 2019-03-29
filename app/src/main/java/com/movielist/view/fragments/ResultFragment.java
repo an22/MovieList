@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.movielist.R;
+import com.movielist.database.KeyDbHelper;
 import com.movielist.model.Error;
 import com.movielist.model.ResultTypes;
 import com.movielist.model.entity.Configuration;
@@ -94,7 +95,7 @@ public class ResultFragment extends ReceiverFragment {
             String country = preferences.getString(CatalogActivity.COUNTRY,"US");
             if(getArguments() != null) {
                 mResult = Result.createResult((ResultTypes)getArguments().getSerializable(Result.TYPE),language,country);
-                InnerHomeAdapter adapter = new InnerHomeAdapter(getContext(), mResult, listener);
+                InnerHomeAdapter adapter = new InnerHomeAdapter(getContext(), mResult, listener,getArguments().getString(KeyDbHelper.SESSION));
                 adapter.setConfiguration((Configuration)getArguments().getSerializable(Configuration.TAG));
                 mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCount));
                 mRecyclerView.setAdapter(adapter);

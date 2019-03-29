@@ -7,11 +7,10 @@ import com.movielist.model.Error;
 import com.movielist.model.TmdbConstants;
 import com.movielist.model.entity.ImagePaths;
 import com.movielist.model.model_interfaces.MovieModel;
+import com.movielist.model.network.Rating;
 import com.movielist.model.network.RetrofitSingleton;
 import com.movielist.model.network.requests.Movies;
 import com.movielist.presenter.model_listeners.UINetworkListener;
-
-import java.io.IOException;
 
 import androidx.annotation.NonNull;
 import retrofit2.Call;
@@ -128,11 +127,20 @@ public class Movie implements MovieModel {
 
     @Override
     public void rate(int rating,String session) {
-        try {
-            mMovieRequests.rate(String.valueOf(id),TmdbConstants.keyV3,session,rating).execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        mMovieRequests.rate(String.valueOf(id),TmdbConstants.keyV3,session,new Rating(rating)).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call,@NonNull Response<Void> response) {
+                Log.i(TAG, response.toString());
+                if(response.code()!= 201){
+                    Log.e(TAG, Error.BAD_RESPONSE);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call,@NonNull Throwable t) {
+                Log.e(TAG, t.toString());
+            }
+        });
     }
 
 }

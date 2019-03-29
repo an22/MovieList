@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.movielist.R;
+import com.movielist.database.KeyDbHelper;
 import com.movielist.model.Error;
 import com.movielist.model.entity.Configuration;
 import com.movielist.presenter.model_listeners.UINetworkListener;
@@ -79,7 +80,8 @@ public class HomeFragment extends Fragment {
                     listener,
                     preferences.getString(CatalogActivity.LANGUAGE,"en"),
                     preferences.getString(CatalogActivity.COUNTRY,"US"),
-                    (Configuration)getArguments().getSerializable(Configuration.TAG));
+                    (Configuration)getArguments().getSerializable(Configuration.TAG),
+                    getArguments().getString(KeyDbHelper.SESSION));
 
             LinearLayoutManager manager = new LinearLayoutManager(getContext());
 

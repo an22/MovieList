@@ -130,11 +130,16 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
     @Override
     public void runHome(Configuration configuration) {
         if(!isFinishing()&&!isDestroyed()) {
+
             HomeFragment fragment = new HomeFragment();
             Bundle args = new Bundle();
+
+            args.putString(KeyDbHelper.SESSION,session);
             args.putSerializable(Configuration.TAG, configuration);
             fragment.setArguments(args);
+
             errorLayout.setVisibility(View.GONE);
+
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.container, fragment)
@@ -148,6 +153,7 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
         if(!isFinishing()&&!isDestroyed()) {
             SearchFragment fragment = new SearchFragment();
             Bundle args = new Bundle();
+            args.putString(KeyDbHelper.SESSION,session);
             args.putSerializable(Configuration.TAG, configuration);
             fragment.setArguments(args);
             errorLayout.setVisibility(View.GONE);

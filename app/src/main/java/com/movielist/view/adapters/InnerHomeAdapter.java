@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.movielist.R;
+import com.movielist.database.KeyDbHelper;
 import com.movielist.model.entity.Configuration;
 import com.movielist.model.entity.Result;
 import com.movielist.model.entity.moviedetails.Movie;
@@ -31,10 +32,12 @@ public class InnerHomeAdapter extends RecyclerView.Adapter<InnerHomeAdapter.Inne
     private Result result;
     private Configuration mConfiguration;
     private Context mContext;
+    private  String session;
 
 
-    public InnerHomeAdapter(Context context, Result result, UINetworkListener listener) {
+    public InnerHomeAdapter(Context context, Result result, UINetworkListener listener, String session) {
         this.result = result;
+        this.session = session;
         result.setListener(new UINetworkListener() {
             @Override
             public void onLoaded() {
@@ -113,6 +116,7 @@ public class InnerHomeAdapter extends RecyclerView.Adapter<InnerHomeAdapter.Inne
             }
 
             Bundle arguments = new Bundle();
+            arguments.putString(KeyDbHelper.SESSION,session);
             arguments.putSerializable(Configuration.TAG,mConfiguration);
             arguments.putInt(Movie.TAG,result.getResults().get(getLayoutPosition()).getID());
             Intent movieActivity = new Intent(mContext, MovieActivity.class);

@@ -19,7 +19,6 @@ import androidx.fragment.app.DialogFragment;
 
 public class RateDialog extends DialogFragment {
 
-    private ViewGroup container;
     private ImageView[] mImageViews;
     private RateListener mRateListener;
     private int rating;
@@ -27,10 +26,10 @@ public class RateDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        rating = 0;
+        rating = 1;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_lview,null);
-        container = view.findViewById(R.id.dialog_container);
+        ViewGroup container = view.findViewById(R.id.dialog_container);
         mImageViews = new ImageView[10];
 
         for (int i = 0; i < 10; i++){
@@ -55,7 +54,7 @@ public class RateDialog extends DialogFragment {
         builder.setView(view);
         builder.setMessage("Rate");
         builder.setNegativeButton("cancel", (dialog, which) -> dialog.dismiss());
-        builder.setPositiveButton("rate", (dialog, which) -> mRateListener.rate(rating));
+        builder.setPositiveButton("rate", (dialog, which) -> mRateListener.rate(rating  + 1));
         return builder.create();
     }
 

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.movielist.R;
 import com.movielist.database.KeyDbHelper;
 import com.movielist.model.RateDialog;
@@ -24,6 +25,7 @@ import com.movielist.view.adapters.ImageAdapter;
 import com.movielist.view.adapters.PersonAdapter;
 import com.movielist.view.view_interfaces.MovieView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -94,6 +96,9 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
 
         mCredits.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
         images.setAdapter(new PersonAdapter(this,mConfiguration, new Credits().mCasts));
+        if(savedInstanceState != null){
+            mFloatingActionButton.setImageResource(savedInstanceState.getInt("Resource"));
+        }
 
     }
 
@@ -181,6 +186,12 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
     }
 
     @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putInt("Resource", mFloatingActionButton.getId());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:{
@@ -200,5 +211,10 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
     @Override
     public void rate(int rating) {
         mPresenter.rate(rating, session);
+        mFloatingActionButton.setImageResource(R.drawable.ic_star_white_24dp);
+        Snackbar snackbar = Snackbar.make(mScrollView.getRootView(),"ITEM RATED",Snackbar.LENGTH_LONG);
+        snackbar.setAction("DISMISS", v -> snackbar.dismiss())
+                .setActionTextColor(getResources().getColor(R.color.colorAccent))
+                .show();
     }
 }
