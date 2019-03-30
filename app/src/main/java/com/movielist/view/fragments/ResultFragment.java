@@ -16,6 +16,7 @@ import com.movielist.model.Error;
 import com.movielist.model.ResultTypes;
 import com.movielist.model.entity.Configuration;
 import com.movielist.model.entity.Result;
+import com.movielist.model.entity.catalog.User;
 import com.movielist.presenter.model_listeners.UINetworkListener;
 import com.movielist.view.LoadMoreListener;
 import com.movielist.view.activities.CatalogActivity;
@@ -94,12 +95,10 @@ public class ResultFragment extends ReceiverFragment {
             String language = preferences.getString(CatalogActivity.LANGUAGE,"en");
             String country = preferences.getString(CatalogActivity.COUNTRY,"US");
             if(getArguments() != null) {
-                if(savedInstanceState != null && savedInstanceState.getSerializable(Result.TAG) != null){
-                    mResult = (Result)savedInstanceState.getSerializable(Result.TAG);
-                }else {
-                    mResult = Result.createResult((ResultTypes) getArguments().getSerializable(Result.TYPE), language, country);
-                }
-                InnerHomeAdapter adapter = new InnerHomeAdapter(getContext(), mResult, listener,getArguments().getString(KeyDbHelper.SESSION));
+                if(mResult == null) mResult = Result.createResult((ResultTypes) getArguments().getSerializable(Result.TYPE), language, country);
+                String session = getArguments().getString(KeyDbHelper.SESSION);
+                int userID = getArguments().getInt(User.USER);
+                InnerHomeAdapter adapter = new InnerHomeAdapter(getContext(), mResult, listener,session,userID);
                 adapter.setConfiguration((Configuration)getArguments().getSerializable(Configuration.TAG));
                 mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCount));
                 mRecyclerView.setAdapter(adapter);
@@ -112,12 +111,6 @@ public class ResultFragment extends ReceiverFragment {
             listener.onError(Error.ACTIVITY_NOT_FOUND);
         }
         return view;
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putSerializable(Result.TAG,mResult);
-        super.onSaveInstanceState(outState);
     }
 
     @Override

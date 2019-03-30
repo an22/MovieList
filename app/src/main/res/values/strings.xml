@@ -23,4 +23,6 @@
     <string name="movie_list">Movie list</string>
     <string name="show_more">Show more</string>
     <string name="save_image">Save image</string>
+    <string name="add_to_favourites">Add to favourites</string>
+    <string name="add_to_watchlist">Add to watchlist</string>
 </resources>

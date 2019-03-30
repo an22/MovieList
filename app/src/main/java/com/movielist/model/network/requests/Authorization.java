@@ -2,7 +2,7 @@ package com.movielist.model.network.requests;
 
 import com.movielist.model.entity.auth.AccessToken;
 import com.movielist.model.entity.auth.GuestSession;
-import com.movielist.model.entity.auth.Redirect;
+import com.movielist.model.network.bodies.Redirect;
 import com.movielist.model.entity.auth.RequestToken;
 import com.movielist.model.entity.auth.UserSession;
 

@@ -11,10 +11,14 @@ public class MoviePresenter {
 
     private MovieView mMovieView;
     private MovieModel mMovieModel;
+    private String session;
+    private int userID;
 
-    public MoviePresenter(String movieID,MovieView view, MovieModel model){
+    public MoviePresenter(String movieID,MovieView view, MovieModel model, String session,int userID){
         mMovieModel = model;
         mMovieView = view;
+        this.session = session;
+        this.userID = userID;
 
         UINetworkListener listener = new UINetworkListener() {
             @Override
@@ -79,8 +83,24 @@ public class MoviePresenter {
        return formatted;
     }
 
-    public void rate(int rating, String session){
-        mMovieModel.rate(rating, session);
+    public void addToWatchlist(){
+        if (userID != -1) mMovieModel.addToWatchlist(userID,session);
+        else mMovieView.onGuest();
+
+    }
+
+    public void addToFavourites(){
+        if (userID != -1) mMovieModel.addToFavourites(userID,session);
+        else mMovieView.onGuest();
+    }
+
+    public void deleteRating(){
+        if (userID != -1) mMovieModel.deleteRating(session);
+        else mMovieModel.deleteRatingGuest(session);
+    }
+    public void rate(int rating){
+        if(userID != -1) mMovieModel.rate(rating, session);
+        else mMovieModel.rateGuest(rating,session);
     }
 
     public void onDestroy(){

@@ -14,6 +14,9 @@ import com.movielist.model.entity.auth.LoginData;
 import com.movielist.presenter.activity_presenters.LoginPresenter;
 import com.movielist.view.view_interfaces.LoginView;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.browser.customtabs.CustomTabsClient;
 import androidx.browser.customtabs.CustomTabsIntent;

@@ -77,6 +77,10 @@ public class CatalogPresenter {
         model.setUser((User)user);
     }
 
+    public boolean isGuest() {
+        return isGuest;
+    }
+
     public Serializable getUser(){
         if(loaded&&!isGuest) {
             return model.getUser();

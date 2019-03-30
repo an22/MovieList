@@ -15,6 +15,7 @@ public interface MovieView {
     void setImages(ImagePaths images);
     void setRuntime(String runtime);
     void setCredits(Credits credits);
+    void onGuest();
     void onError();
     void show();
 

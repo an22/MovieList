@@ -2,10 +2,13 @@ package com.movielist.model.network.requests;
 
 import com.movielist.model.entity.catalog.MovieResult;
 import com.movielist.model.entity.moviedetails.Movie;
-import com.movielist.model.network.Rating;
+import com.movielist.model.network.bodies.FavouriteBody;
+import com.movielist.model.network.bodies.Rating;
+import com.movielist.model.network.bodies.WatchlistBody;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -33,4 +36,16 @@ public interface Movies {
 
     @POST("/3/movie/{movie_id}/rating")
     Call<Void> rateGuest(@Path("movie_id") String id,@Query("api_key") String key,@Query("guest_session_id") String session,@Body Rating value);
+
+    @DELETE("/3/movie/{movie_id}/rating")
+    Call<Void> deleteRating(@Path("movie_id") String id,@Query("api_key") String key,@Query("session_id") String session);
+
+    @DELETE("/3/movie/{movie_id}/rating")
+    Call<Void> deleteRatingGuest(@Path("movie_id") String id,@Query("api_key") String key,@Query("guest_session_id") String session);
+
+    @POST("/3/account/{account_id}/favorite")
+    Call<Void> markAsFavourite(@Path("account_id")String id, @Query("api_key") String key, @Query("session_id") String session, @Body FavouriteBody favouriteItem);
+
+    @POST("/3/account/{account_id}/watchlist")
+    Call<Void> addToWatchList(@Path("account_id")String id, @Query("api_key") String key, @Query("session_id") String session, @Body WatchlistBody watchlistItem);
 }

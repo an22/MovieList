@@ -16,7 +16,12 @@ public interface MovieModel {
     ImagePaths getImages();
     Credits getCredits();
     int getRuntime();
+    void addToFavourites(int userID,String session);
+    void addToWatchlist(int userID,String session);
+    void deleteRating(String session);
     void rate(int rating, String session);
+    void rateGuest(int rating, String session);
+    void deleteRatingGuest(String session);
 
 
 }

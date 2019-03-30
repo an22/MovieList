@@ -17,6 +17,7 @@ import com.movielist.R;
 import com.movielist.database.KeyDbHelper;
 import com.movielist.model.entity.Configuration;
 import com.movielist.model.entity.Result;
+import com.movielist.model.entity.catalog.User;
 import com.movielist.model.entity.moviedetails.Movie;
 import com.movielist.presenter.model_listeners.UINetworkListener;
 import com.movielist.view.activities.MovieActivity;
@@ -32,12 +33,14 @@ public class InnerHomeAdapter extends RecyclerView.Adapter<InnerHomeAdapter.Inne
     private Result result;
     private Configuration mConfiguration;
     private Context mContext;
-    private  String session;
+    private String session;
+    private int userID;
 
 
-    public InnerHomeAdapter(Context context, Result result, UINetworkListener listener, String session) {
+    public InnerHomeAdapter(Context context, Result result, UINetworkListener listener, String session, int userID) {
         this.result = result;
         this.session = session;
+        this.userID = userID;
         result.setListener(new UINetworkListener() {
             @Override
             public void onLoaded() {
@@ -119,6 +122,7 @@ public class InnerHomeAdapter extends RecyclerView.Adapter<InnerHomeAdapter.Inne
             arguments.putString(KeyDbHelper.SESSION,session);
             arguments.putSerializable(Configuration.TAG,mConfiguration);
             arguments.putInt(Movie.TAG,result.getResults().get(getLayoutPosition()).getID());
+            arguments.putInt(User.USER,userID);
             Intent movieActivity = new Intent(mContext, MovieActivity.class);
 
             movieActivity.putExtras(arguments);

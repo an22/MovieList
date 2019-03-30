@@ -33,6 +33,16 @@
                     android:contentDescription="@string/poster"/>
 
                 <ImageView
+                    android:id="@+id/menu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|end"
+                    android:layout_margin="16dp"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_more_vert_white_24dp"
+                    android:contentDescription="@string/show_more"/>
+
+                <ImageView
                     android:id="@+id/back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

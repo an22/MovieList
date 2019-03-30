@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 public class User implements Serializable {
 
     public static final String USER = "USER";
+    public static final String GUEST = "GUEST";
 
     private boolean isGuest;
 
@@ -41,6 +42,7 @@ public class User implements Serializable {
         language = "en";
         country = "US";
         name = "Guest";
+        id = -1;
         adult = false;
         isGuest = true;
     }

@@ -136,6 +136,7 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
 
             args.putString(KeyDbHelper.SESSION,session);
             args.putSerializable(Configuration.TAG, configuration);
+            args.putInt(User.USER,((User)mPresenter.getUser()).getId());
             fragment.setArguments(args);
 
             errorLayout.setVisibility(View.GONE);
@@ -153,8 +154,11 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
         if(!isFinishing()&&!isDestroyed()) {
             SearchFragment fragment = new SearchFragment();
             Bundle args = new Bundle();
+
             args.putString(KeyDbHelper.SESSION,session);
             args.putSerializable(Configuration.TAG, configuration);
+            args.putInt(User.USER,((User)mPresenter.getUser()).getId());
+
             fragment.setArguments(args);
             errorLayout.setVisibility(View.GONE);
             getSupportFragmentManager()

@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -16,6 +18,7 @@ import com.movielist.R;
 import com.movielist.database.KeyDbHelper;
 import com.movielist.model.RateDialog;
 import com.movielist.model.entity.Configuration;
+import com.movielist.model.entity.catalog.User;
 import com.movielist.model.entity.moviedetails.Credits;
 import com.movielist.model.entity.moviedetails.Movie;
 import com.movielist.model.entity.ImagePaths;
@@ -48,6 +51,9 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
     @BindView(R.id.back)
     ImageView backIcon;
 
+    @BindView(R.id.menu)
+    ImageView more;
+
     @BindView(R.id.rating)
     TextView rating;
 
@@ -74,7 +80,6 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
 
     private Configuration mConfiguration;
     private MoviePresenter mPresenter;
-    private String session;
     private boolean isRated;
 
     @Override
@@ -87,9 +92,10 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
 
         if(extras != null){
             int movieID = extras.getInt(Movie.TAG);
-            session = extras.getString(KeyDbHelper.SESSION);
+            String session = extras.getString(KeyDbHelper.SESSION);
             mConfiguration = (Configuration)extras.getSerializable(Configuration.TAG);
-            mPresenter = new MoviePresenter(String.valueOf(movieID),this,new Movie());
+            int userID = extras.getInt(User.USER);
+            mPresenter = new MoviePresenter(String.valueOf(movieID), this, new Movie(), session,userID);
         }
 
         images.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
@@ -97,6 +103,7 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
 
         mCredits.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
         images.setAdapter(new PersonAdapter(this,mConfiguration, new Credits().mCasts));
+
         if(savedInstanceState != null){
             if(savedInstanceState.getBoolean("Resource")) {
                 mFloatingActionButton.setImageResource(R.drawable.ic_star_white_24dp);
@@ -118,10 +125,32 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
         onBackPressed();
     }
 
+    @OnClick(R.id.menu)
+    void menuClick(View view){
+        PopupMenu popupMenu = new PopupMenu(this,view);
+        popupMenu.getMenuInflater().inflate(R.menu.movie_menu,popupMenu.getMenu());
+
+        popupMenu.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()){
+                case R.id.add_to_fav:{
+                    mPresenter.addToFavourites();
+                    break;
+                }
+                case R.id.add_to_watchlist:{
+                    mPresenter.addToWatchlist();
+                    break;
+                }
+            }
+            return true;
+        });
+        popupMenu.show();
+    }
+
     @OnClick(R.id.floatingButton)
     void rateClick(){
         showDialog();
     }
+
     @Override
     public void addRating(String rating) {
         this.rating.setText(rating);
@@ -180,6 +209,11 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
     }
 
     @Override
+    public void onGuest() {
+        Toast.makeText(this,"You must be logged in",Toast.LENGTH_LONG).show();
+    }
+
+    @Override
     public void onError() {
 
     }
@@ -216,11 +250,18 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
 
     @Override
     public void rate(int rating) {
-        mPresenter.rate(rating, session);
+        mPresenter.rate(rating);
         mFloatingActionButton.setImageResource(R.drawable.ic_star_white_24dp);
         isRated = true;
-        Snackbar snackbar = Snackbar.make(mScrollView.getRootView(),"ITEM RATED",Snackbar.LENGTH_LONG);
-        snackbar.setAction("DISMISS", v -> snackbar.dismiss())
+        Snackbar snackbar = Snackbar.make(mScrollView.getRootView(),"SUCCESSFULLY RATED",3000);
+        snackbar.getView().setBackgroundResource(R.color.colorPrimary);
+        snackbar.setAction("DISMISS", v -> {
+
+            mPresenter.deleteRating();
+            mFloatingActionButton.setImageResource(R.drawable.ic_star_border_white_24dp);
+            snackbar.dismiss();
+
+        })
                 .setActionTextColor(getResources().getColor(R.color.colorAccent))
                 .show();
     }

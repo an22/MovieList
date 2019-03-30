@@ -14,6 +14,7 @@ import com.movielist.R;
 import com.movielist.database.KeyDbHelper;
 import com.movielist.model.Error;
 import com.movielist.model.entity.Configuration;
+import com.movielist.model.entity.catalog.User;
 import com.movielist.presenter.model_listeners.UINetworkListener;
 import com.movielist.view.activities.CatalogActivity;
 import com.movielist.view.adapters.HomeAdapter;
@@ -81,7 +82,8 @@ public class HomeFragment extends Fragment {
                     preferences.getString(CatalogActivity.LANGUAGE,"en"),
                     preferences.getString(CatalogActivity.COUNTRY,"US"),
                     (Configuration)getArguments().getSerializable(Configuration.TAG),
-                    getArguments().getString(KeyDbHelper.SESSION));
+                    getArguments().getString(KeyDbHelper.SESSION),
+                    getArguments().getInt(User.USER));
 
             LinearLayoutManager manager = new LinearLayoutManager(getContext());
 

@@ -4,11 +4,14 @@ import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 import com.movielist.model.Error;
+import com.movielist.model.ResultTypes;
 import com.movielist.model.TmdbConstants;
 import com.movielist.model.entity.ImagePaths;
 import com.movielist.model.model_interfaces.MovieModel;
-import com.movielist.model.network.Rating;
 import com.movielist.model.network.RetrofitSingleton;
+import com.movielist.model.network.bodies.FavouriteBody;
+import com.movielist.model.network.bodies.Rating;
+import com.movielist.model.network.bodies.WatchlistBody;
 import com.movielist.model.network.requests.Movies;
 import com.movielist.presenter.model_listeners.UINetworkListener;
 
@@ -126,6 +129,51 @@ public class Movie implements MovieModel {
     }
 
     @Override
+    public void addToFavourites(int userID,String session) {
+        mMovieRequests.markAsFavourite(String.valueOf(userID),TmdbConstants.keyV3,session,new FavouriteBody(ResultTypes.MOVIE,id)).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call,@NonNull Response<Void> response) {
+                Log.i(TAG,response.toString());
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call,@NonNull Throwable t) {
+                Log.e(TAG,t.toString());
+            }
+        });
+    }
+
+    @Override
+    public void addToWatchlist(int userID,String session) {
+        mMovieRequests.addToWatchList(String.valueOf(userID),TmdbConstants.keyV3,session, new WatchlistBody(ResultTypes.MOVIE,id)).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call,@NonNull Response<Void> response) {
+                Log.i(TAG,response.toString());
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call,@NonNull Throwable t) {
+                Log.e(TAG,t.toString());
+            }
+        });
+    }
+
+    @Override
+    public void deleteRating(String session) {
+        mMovieRequests.deleteRating(String.valueOf(id),TmdbConstants.keyV3,session).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call,@NonNull Response<Void> response) {
+                Log.i(TAG,response.toString());
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call,@NonNull Throwable t) {
+                Log.e(TAG,t.toString());
+            }
+        });
+    }
+
+    @Override
     public void rate(int rating,String session) {
         mMovieRequests.rate(String.valueOf(id),TmdbConstants.keyV3,session,new Rating(rating)).enqueue(new Callback<Void>() {
             @Override
@@ -139,6 +187,39 @@ public class Movie implements MovieModel {
             @Override
             public void onFailure(@NonNull Call<Void> call,@NonNull Throwable t) {
                 Log.e(TAG, t.toString());
+            }
+        });
+    }
+
+    @Override
+    public void rateGuest(int rating, String session) {
+        mMovieRequests.rateGuest(String.valueOf(id),TmdbConstants.keyV3,session,new Rating(rating)).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call,@NonNull Response<Void> response) {
+                Log.i(TAG, response.toString());
+                if(response.code()!= 201){
+                    Log.e(TAG, Error.BAD_RESPONSE);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call,@NonNull Throwable t) {
+                Log.e(TAG, t.toString());
+            }
+        });
+    }
+
+    @Override
+    public void deleteRatingGuest(String session) {
+        mMovieRequests.deleteRating(String.valueOf(id),TmdbConstants.keyV3,session).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call,@NonNull Response<Void> response) {
+                Log.i(TAG,response.toString());
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call,@NonNull Throwable t) {
+                Log.e(TAG,t.toString());
             }
         });
     }

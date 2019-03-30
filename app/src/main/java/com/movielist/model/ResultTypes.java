@@ -1,9 +1,9 @@
 package com.movielist.model;
 
 public enum ResultTypes {
-    MOVIE("Movies"),
-    TV("TV"),
-    PEOPLE("People");
+    MOVIE("movie"),
+    TV("tv"),
+    PEOPLE("people");
 
     private String name;
 
