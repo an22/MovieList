@@ -10,12 +10,8 @@ import androidx.annotation.NonNull;
 public class User implements Serializable {
 
     public static final String USER = "USER";
-    public static final String GUEST = "GUEST";
 
     private boolean isGuest;
-
-    @SerializedName("avatar")
-    private Avatar avatar;
 
     @SerializedName("id")
     private int id;
@@ -48,30 +44,6 @@ public class User implements Serializable {
     }
 
 
-    //This class is inner cuz without user that class is useless
-    class Avatar implements Serializable {
-
-        //For more info about gravatar check out https://gravatar.com
-        @SerializedName("gravatar")
-        private Gravatar gravatar;
-
-        String getGravatar() {
-            return gravatar.getHash();
-        }
-
-        class Gravatar implements Serializable {
-
-            @SerializedName("hash")
-            private String hash;
-
-            String getHash() {
-                return hash;
-            }
-        }
-
-    }
-
-
     //----------------------------------------------------------------------------------
 
 
@@ -79,7 +51,7 @@ public class User implements Serializable {
         return mAccessToken;
     }
 
-    public void setAccessToken(AccessToken accessToken) {
+    void setAccessToken(AccessToken accessToken) {
         mAccessToken = accessToken;
     }
 
@@ -91,20 +63,8 @@ public class User implements Serializable {
         return isGuest;
     }
 
-    public void setGuest(boolean guest) {
+    void setGuest(boolean guest) {
         isGuest = guest;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAvatar() {
-        return avatar.getGravatar();
     }
 
     public int getId() {

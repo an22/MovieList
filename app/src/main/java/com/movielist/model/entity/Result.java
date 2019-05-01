@@ -16,7 +16,7 @@ public abstract class Result implements Loadable, Serializable {
 
     public static final String TAG = "Result";
     public static final String TYPE = "Type";
-    protected static String NETWORK_TAG = "Network";
+    protected static final String NETWORK_TAG = "Network";
 
     @SerializedName("page")
     protected int currentPage;
@@ -35,7 +35,7 @@ public abstract class Result implements Loadable, Serializable {
     protected String region;
     protected String currentQuery;
 
-    public Result(String language,String region){
+    protected Result(String language, String region){
         results = new ArrayList<>();
         this.language = language;
         this.region = region;

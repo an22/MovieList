@@ -38,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="top|end"
                     android:layout_margin="16dp"
-                    android:background="?selectableItemBackgroundBorderless"
+                    android:background="?selectableItemBackground"
                     android:src="@drawable/ic_more_vert_white_24dp"
                     android:contentDescription="@string/show_more"/>
 

@@ -129,75 +129,101 @@ public class Movie implements MovieModel {
     }
 
     @Override
-    public void addToFavourites(int userID,String session) {
+    public void addToFavourites(int userID,String session,UINetworkListener listener) {
         mMovieRequests.markAsFavourite(String.valueOf(userID),TmdbConstants.keyV3,session,new FavouriteBody(ResultTypes.MOVIE,id)).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call,@NonNull Response<Void> response) {
                 Log.i(TAG,response.toString());
+                if(response.code() == 201){
+                    listener.onLoaded();
+                }
+                else {
+                    listener.onError(Error.BAD_RESPONSE);
+                }
             }
 
             @Override
             public void onFailure(@NonNull Call<Void> call,@NonNull Throwable t) {
                 Log.e(TAG,t.toString());
+                listener.onError(Error.NETWORK_ERROR);
             }
         });
     }
 
     @Override
-    public void addToWatchlist(int userID,String session) {
+    public void addToWatchlist(int userID,String session,UINetworkListener listener) {
         mMovieRequests.addToWatchList(String.valueOf(userID),TmdbConstants.keyV3,session, new WatchlistBody(ResultTypes.MOVIE,id)).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call,@NonNull Response<Void> response) {
                 Log.i(TAG,response.toString());
+                if(response.code() == 201){
+                    listener.onLoaded();
+                }
+                else {
+                    listener.onError(Error.BAD_RESPONSE);
+                }
             }
 
             @Override
             public void onFailure(@NonNull Call<Void> call,@NonNull Throwable t) {
                 Log.e(TAG,t.toString());
+                listener.onError(Error.NETWORK_ERROR);
             }
         });
     }
 
     @Override
-    public void deleteRating(String session) {
+    public void deleteRating(String session,UINetworkListener listener) {
         mMovieRequests.deleteRating(String.valueOf(id),TmdbConstants.keyV3,session).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call,@NonNull Response<Void> response) {
                 Log.i(TAG,response.toString());
+                if(response.code() != 200){
+                    listener.onError(Error.BAD_RESPONSE);
+                }
             }
 
             @Override
             public void onFailure(@NonNull Call<Void> call,@NonNull Throwable t) {
                 Log.e(TAG,t.toString());
+                listener.onError(Error.NETWORK_ERROR);
             }
         });
     }
 
     @Override
-    public void rate(int rating,String session) {
+    public void rate(int rating,String session,UINetworkListener listener) {
         mMovieRequests.rate(String.valueOf(id),TmdbConstants.keyV3,session,new Rating(rating)).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call,@NonNull Response<Void> response) {
                 Log.i(TAG, response.toString());
-                if(response.code()!= 201){
-                    Log.e(TAG, Error.BAD_RESPONSE);
+                if(response.code() == 201){
+                    listener.onStart();
+                }
+                else {
+                    listener.onError(Error.BAD_RESPONSE);
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<Void> call,@NonNull Throwable t) {
                 Log.e(TAG, t.toString());
+                listener.onError(Error.NETWORK_ERROR);
             }
         });
     }
 
     @Override
-    public void rateGuest(int rating, String session) {
+    public void rateGuest(int rating, String session,UINetworkListener listener) {
         mMovieRequests.rateGuest(String.valueOf(id),TmdbConstants.keyV3,session,new Rating(rating)).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call,@NonNull Response<Void> response) {
                 Log.i(TAG, response.toString());
-                if(response.code()!= 201){
+                if(response.code()== 201){
+                    listener.onStart();
+                }
+                else{
+                    listener.onError(Error.BAD_RESPONSE);
                     Log.e(TAG, Error.BAD_RESPONSE);
                 }
             }
@@ -205,21 +231,25 @@ public class Movie implements MovieModel {
             @Override
             public void onFailure(@NonNull Call<Void> call,@NonNull Throwable t) {
                 Log.e(TAG, t.toString());
+                listener.onError(Error.NETWORK_ERROR);
             }
         });
     }
 
     @Override
-    public void deleteRatingGuest(String session) {
+    public void deleteRatingGuest(String session,UINetworkListener listener) {
         mMovieRequests.deleteRating(String.valueOf(id),TmdbConstants.keyV3,session).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call,@NonNull Response<Void> response) {
-                Log.i(TAG,response.toString());
+                if(response.code() != 200){
+                    listener.onError(Error.BAD_RESPONSE);
+                }
             }
 
             @Override
             public void onFailure(@NonNull Call<Void> call,@NonNull Throwable t) {
                 Log.e(TAG,t.toString());
+                listener.onError(Error.NETWORK_ERROR);
             }
         });
     }

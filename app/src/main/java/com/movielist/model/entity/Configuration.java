@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class Configuration implements Serializable {
 
-    public static String TAG = "Configuration";
+    public static final String TAG = "Configuration";
 
     @SerializedName("images")
     private ImageConfiguration imageConfig;

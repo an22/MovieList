@@ -14,9 +14,6 @@ import com.movielist.model.entity.auth.LoginData;
 import com.movielist.presenter.activity_presenters.LoginPresenter;
 import com.movielist.view.view_interfaces.LoginView;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.browser.customtabs.CustomTabsClient;
 import androidx.browser.customtabs.CustomTabsIntent;
@@ -46,7 +43,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     private CustomTabsServiceConnection mConnection;
 
     //Chrome package
-    public static final String CUSTOM_TAB_PACKAGE_NAME = "com.android.chrome";
+    private static final String CUSTOM_TAB_PACKAGE_NAME = "com.android.chrome";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

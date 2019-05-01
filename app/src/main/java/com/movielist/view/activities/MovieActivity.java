@@ -209,13 +209,27 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
     }
 
     @Override
+    public void rate(int rating) {
+        mPresenter.rate(rating);
+    }
+
+    @Override
     public void onGuest() {
         Toast.makeText(this,"You must be logged in",Toast.LENGTH_LONG).show();
     }
 
     @Override
-    public void onError() {
+    public void onError(String error) {
+        Toast.makeText(this,error,Toast.LENGTH_LONG).show();
+    }
 
+    @Override
+    public void showSuccess() {
+        Snackbar snackbar = Snackbar.make(mScrollView.getRootView(),"SUCCESS",3000);
+        snackbar.getView().setBackgroundResource(R.color.colorPrimary);
+        snackbar.setAction("DISMISS", v -> snackbar.dismiss())
+                .setActionTextColor(getResources().getColor(R.color.colorAccent))
+                .show();
     }
 
     @Override
@@ -223,6 +237,23 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
         mProgressBar.setVisibility(View.GONE);
         mFloatingActionButton.setVisibility(View.VISIBLE);
         mScrollView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showSuccessfullRating() {
+        Snackbar snackbar = Snackbar.make(mScrollView.getRootView(),"SUCCESS",3000);
+        snackbar.getView().setBackgroundResource(R.color.colorPrimary);
+        snackbar.setAction("DISMISS", v -> {
+            mPresenter.deleteRating();
+            snackbar.dismiss();
+            mFloatingActionButton.setImageResource(R.drawable.ic_star_border_white_24dp);
+            isRated = false;
+
+        })
+                .setActionTextColor(getResources().getColor(R.color.colorAccent))
+                .show();
+        mFloatingActionButton.setImageResource(R.drawable.ic_star_white_24dp);
+        isRated = true;
     }
 
     @Override
@@ -248,21 +279,4 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
         mPresenter.onDestroy();
     }
 
-    @Override
-    public void rate(int rating) {
-        mPresenter.rate(rating);
-        mFloatingActionButton.setImageResource(R.drawable.ic_star_white_24dp);
-        isRated = true;
-        Snackbar snackbar = Snackbar.make(mScrollView.getRootView(),"SUCCESSFULLY RATED",3000);
-        snackbar.getView().setBackgroundResource(R.color.colorPrimary);
-        snackbar.setAction("DISMISS", v -> {
-
-            mPresenter.deleteRating();
-            mFloatingActionButton.setImageResource(R.drawable.ic_star_border_white_24dp);
-            snackbar.dismiss();
-
-        })
-                .setActionTextColor(getResources().getColor(R.color.colorAccent))
-                .show();
-    }
 }

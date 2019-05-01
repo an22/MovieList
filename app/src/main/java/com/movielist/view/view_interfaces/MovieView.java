@@ -16,7 +16,8 @@ public interface MovieView {
     void setRuntime(String runtime);
     void setCredits(Credits credits);
     void onGuest();
-    void onError();
+    void onError(String error);
+    void showSuccess();
     void show();
-
+    void showSuccessfullRating();
 }

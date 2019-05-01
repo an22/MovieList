@@ -13,6 +13,7 @@ public class MoviePresenter {
     private MovieModel mMovieModel;
     private String session;
     private int userID;
+    private UINetworkListener toolsListener;
 
     public MoviePresenter(String movieID,MovieView view, MovieModel model, String session,int userID){
         mMovieModel = model;
@@ -27,9 +28,9 @@ public class MoviePresenter {
                 view.addDescription(model.getDescription());
                 view.addGenres(formatGenres());
 
-                DecimalFormat formater = new DecimalFormat("#.#");
+                DecimalFormat formateur = new DecimalFormat("#.#");
 
-                view.addRating(formater.format(model.getRating()));
+                view.addRating(formateur.format(model.getRating()));
                 view.setPoster(getPath());
                 view.setRuntime(formatRuntime());
                 view.setImages(model.getImages());
@@ -45,7 +46,25 @@ public class MoviePresenter {
 
             @Override
             public void onError(String error) {
-                view.onError();
+                view.onError(error);
+            }
+        };
+
+        toolsListener = new UINetworkListener() {
+            @Override
+            public void onLoaded() {
+                view.showSuccess();
+            }
+
+            //In this case onStart means successful rate(Bad decision)
+            @Override
+            public void onStart() {
+                view.showSuccessfullRating();
+            }
+
+            @Override
+            public void onError(String error) {
+                view.onError(error);
             }
         };
 
@@ -84,23 +103,23 @@ public class MoviePresenter {
     }
 
     public void addToWatchlist(){
-        if (userID != -1) mMovieModel.addToWatchlist(userID,session);
+        if (userID != -1) mMovieModel.addToWatchlist(userID,session,toolsListener);
         else mMovieView.onGuest();
 
     }
 
     public void addToFavourites(){
-        if (userID != -1) mMovieModel.addToFavourites(userID,session);
+        if (userID != -1) mMovieModel.addToFavourites(userID,session,toolsListener);
         else mMovieView.onGuest();
     }
 
     public void deleteRating(){
-        if (userID != -1) mMovieModel.deleteRating(session);
-        else mMovieModel.deleteRatingGuest(session);
+        if (userID != -1) mMovieModel.deleteRating(session,toolsListener);
+        else mMovieModel.deleteRatingGuest(session,toolsListener);
     }
     public void rate(int rating){
-        if(userID != -1) mMovieModel.rate(rating, session);
-        else mMovieModel.rateGuest(rating,session);
+        if(userID != -1) mMovieModel.rate(rating, session,toolsListener);
+        else mMovieModel.rateGuest(rating,session,toolsListener);
     }
 
     public void onDestroy(){

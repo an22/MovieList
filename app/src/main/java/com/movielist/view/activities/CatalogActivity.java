@@ -31,6 +31,7 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
     private static final String TAG = "CATALOG_ACTIVITY";
 
     private CatalogPresenter mPresenter;
+
     public static final String LANGUAGE = "language";
     public static final String COUNTRY = "country";
 

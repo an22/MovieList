@@ -33,12 +33,22 @@
                     android:contentDescription="@string/poster"/>
 
                 <ImageView
+                    android:id="@+id/menu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|end"
+                    android:layout_margin="16dp"
+                    android:foreground="?selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_more_vert_white_24dp"
+                    android:contentDescription="@string/show_more"/>
+
+                <ImageView
                     android:id="@+id/back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top|start"
                     android:layout_margin="16dp"
-                    android:background="?selectableItemBackground"
+                    android:foreground="?selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_arrow_back_white_24dp"
                     android:contentDescription="@string/ret"/>
                 <View
@@ -57,6 +67,17 @@
                     android:drawablePadding="4dp"
                     android:textSize="20sp"
                     android:layout_gravity="bottom|start"/>
+
+                <TextView
+                    android:id="@+id/runtime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center"
+                    android:layout_marginBottom="16dp"
+                    android:drawableStart="@drawable/ic_length_white_24dp"
+                    android:textSize="18sp"
+                    android:drawablePadding="4dp"
+                    android:textAlignment="center" />
 
             </FrameLayout>
 
@@ -95,7 +116,7 @@
                 android:textSize="16sp"/>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/cast"
+                android:id="@+id/credits"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"

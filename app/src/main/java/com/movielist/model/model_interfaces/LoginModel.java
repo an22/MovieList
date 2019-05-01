@@ -1,16 +1,15 @@
 package com.movielist.model.model_interfaces;
 
-import com.movielist.model.entity.auth.AccessToken;
 import com.movielist.model.entity.auth.RequestToken;
+import com.movielist.presenter.model_listeners.UINetworkListener;
 
 public interface LoginModel {
-    void setRequestToken(RequestToken requestToken);
-    void setAccessToken(AccessToken accessToken);
-    AccessToken getAccessToken();
     RequestToken getRequestToken();
-    boolean saveDataToDb(String column,String data);
+    Session getSession();
+    void loadAccessToken(UINetworkListener listener);
+    void loadRequestToken(UINetworkListener listener);
+    void loadGuestSession(UINetworkListener listener);
     boolean loadRequestTokenFromDb();
-    boolean loadAccessTokenFromDb();
 
 
 

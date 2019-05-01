@@ -1,8 +1,9 @@
 package com.movielist.model.entity.auth;
 
 import com.google.gson.annotations.SerializedName;
+import com.movielist.model.model_interfaces.Session;
 
-public class GuestSession {
+public class GuestSession implements Session {
 
     @SerializedName("success")
     private boolean success;
@@ -13,7 +14,7 @@ public class GuestSession {
     @SerializedName("expires_at")
     private String expireDate;
 
-    public String getSessionId(){
+    public String getSessionID(){
         return sessionId;
     }
 }

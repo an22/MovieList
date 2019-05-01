@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class AccessToken implements Serializable {
 
-    public static String TAG = "AccessToken";
+    public static final String TAG = "AccessToken";
 
     @SerializedName("account_id")
     private String accountId;
