@@ -1,11 +1,17 @@
 package com.movielist.view.activities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.movielist.R;
@@ -19,9 +25,6 @@ import com.movielist.view.fragments.HomeFragment;
 import com.movielist.view.fragments.SearchFragment;
 import com.movielist.view.view_interfaces.CatalogView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -43,6 +46,9 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
 
     @BindView(R.id.progress)
     ProgressBar mProgressBar;
+
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
 
     private String session;
 
@@ -85,11 +91,14 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
                         item.setIcon(R.drawable.ic_home_white_24dp);
                         runHome(mPresenter.getConfiguration());
                         hideProgress();
+                        mToolbar.setVisibility(View.VISIBLE);
                         return true;
                     }
                     case R.id.run_search:{
                         bottomNavigation.getMenu().getItem(0).setIcon(R.drawable.ic_outline_home_24dp);
                         runSearch(mPresenter.getConfiguration());
+
+                        mToolbar.setVisibility(View.GONE);
                         hideProgress();
                         return true;
                     }
@@ -98,7 +107,12 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
             }
             else return false;
         });
-
+        mToolbar.setOnMenuItemClickListener(item -> {
+            if(item.getItemId() == R.id.log_out){
+                deleteSession();
+            }
+            return true;
+        });
     }
 
     @Override
@@ -156,9 +170,7 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
             SearchFragment fragment = new SearchFragment();
             Bundle args = new Bundle();
 
-            args.putString(KeyDbHelper.SESSION,session);
             args.putSerializable(Configuration.TAG, configuration);
-            args.putInt(User.USER,((User)mPresenter.getUser()).getId());
 
             fragment.setArguments(args);
             errorLayout.setVisibility(View.GONE);
@@ -170,10 +182,34 @@ public class CatalogActivity extends AppCompatActivity implements CatalogView {
         }
     }
 
+    @Override
+    public void onBackPressed(){
+        switch (bottomNavigation.getSelectedItemId()){
+            case R.id.run_home:{
+                runSearch(mPresenter.getConfiguration());
+                mToolbar.setVisibility(View.GONE);
+                bottomNavigation.setSelectedItemId(R.id.run_search);
+                break;
+            }
+            case R.id.run_search:{
+                runHome(mPresenter.getConfiguration());
+                bottomNavigation.setSelectedItemId(R.id.run_home);
+                break;
+            }
+        }
+    }
+
+    public void deleteSession(){
+        mPresenter.deleteSession();
+        deleteDatabase(KeyDbHelper.DATABASE_NAME);
+        Intent intent = new Intent(this,LoginActivity.class);
+        startActivity(intent);
+    }
 
     @Override
     public void onError(String message) {
         errorLayout.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.INVISIBLE);
         errorLayout.setText(message);
         Log.e(TAG,message);
     }

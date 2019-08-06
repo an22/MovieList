@@ -16,7 +16,6 @@ public class CatalogPresenter {
     private CatalogView view;
 
     private boolean loaded = false;
-    private boolean isGuest = false;
 
     private GuestListener mListener;
 
@@ -29,7 +28,7 @@ public class CatalogPresenter {
 
             @Override
             public void onGuest() {
-                isGuest = true;
+                loaded = true;
                 onLoaded();
             }
 
@@ -77,13 +76,14 @@ public class CatalogPresenter {
         model.setUser((User)user);
     }
 
+    public void deleteSession(){
+        model.deleteSession();
+    }
+
     public Serializable getUser(){
-        if(loaded&&!isGuest) {
-            return model.getUser();
-        }else if(loaded){
-            return new User();
-        }
-        return null;
+        if(loaded)
+        return model.getUser();
+        return new User("");
     }
 
     public void onDestroy(){

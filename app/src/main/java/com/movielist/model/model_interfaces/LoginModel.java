@@ -10,7 +10,4 @@ public interface LoginModel {
     void loadRequestToken(UINetworkListener listener);
     void loadGuestSession(UINetworkListener listener);
     boolean loadRequestTokenFromDb();
-
-
-
 }

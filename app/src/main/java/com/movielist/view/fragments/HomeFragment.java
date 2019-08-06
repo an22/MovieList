@@ -10,6 +10,12 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.movielist.R;
 import com.movielist.database.KeyDbHelper;
 import com.movielist.model.Error;
@@ -19,11 +25,6 @@ import com.movielist.presenter.model_listeners.UINetworkListener;
 import com.movielist.view.activities.CatalogActivity;
 import com.movielist.view.adapters.HomeAdapter;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -50,7 +51,7 @@ public class HomeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_home,container,false);
         mUnbinder = ButterKnife.bind(this, view);
-
+        setHasOptionsMenu(true);
         UINetworkListener listener = new UINetworkListener() {
             @Override
             public void onLoaded() {
@@ -73,7 +74,6 @@ public class HomeFragment extends Fragment {
                 Log.e(TAG,error);
             }
         };
-
         if(getArguments() != null && getActivity()!= null) {
             SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
             HomeAdapter adapter = new HomeAdapter(

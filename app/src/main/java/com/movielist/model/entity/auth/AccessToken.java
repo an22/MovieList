@@ -6,19 +6,10 @@ import java.io.Serializable;
 
 public class AccessToken implements Serializable {
 
-    public static final String TAG = "AccessToken";
-
-    @SerializedName("account_id")
-    private String accountId;
+    public static transient final String TAG = "AccessToken";
 
     @SerializedName("access_token")
     private String accessToken;
-
-    @SerializedName("success")
-    private boolean success;
-
-    @SerializedName("status_message")
-    private String statusMessage;
 
     public AccessToken(String accessToken){
         this.accessToken = accessToken;

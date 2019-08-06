@@ -7,7 +7,11 @@ import com.movielist.model.model_interfaces.LoginModel;
 import com.movielist.presenter.model_listeners.UINetworkListener;
 import com.movielist.view.view_interfaces.LoginView;
 
-public class LoginPresenter {
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.OnLifecycleEvent;
+
+public class LoginPresenter implements LifecycleObserver {
 
     private LoginView mLoginView;
     private LoginModel loginModel;
@@ -51,14 +55,12 @@ public class LoginPresenter {
     public void getAccessToken(){
         if(loginModel.loadRequestTokenFromDb()) {
             loginModel.loadAccessToken(mListener);
-
         }else {
-
             mLoginView.onError(Error.DATABASE_ERROR);
-
         }
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void onDestroy(){
         mLoginView = null;
         loginModel = null;

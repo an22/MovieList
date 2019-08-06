@@ -1,6 +1,6 @@
 package com.movielist.view.adapters;
 
-import com.movielist.view.view_interfaces.ReceiverFragment;
+import com.movielist.view.fragments.ReceiverFragment;
 
 import java.util.ArrayList;
 import java.util.List;

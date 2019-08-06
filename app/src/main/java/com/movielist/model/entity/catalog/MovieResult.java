@@ -5,7 +5,6 @@ import android.util.Log;
 import com.movielist.model.Error;
 import com.movielist.model.TmdbConstants;
 import com.movielist.model.entity.DownloadTypes;
-import com.movielist.model.entity.Result;
 import com.movielist.model.network.RetrofitSingleton;
 import com.movielist.model.network.requests.Movies;
 

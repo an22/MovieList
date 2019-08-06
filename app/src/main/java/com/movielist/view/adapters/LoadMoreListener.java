@@ -1,4 +1,4 @@
-package com.movielist.view;
+package com.movielist.view.adapters;
 
 import com.movielist.model.model_interfaces.Loadable;
 

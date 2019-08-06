@@ -1,4 +1,4 @@
-package com.movielist.view.view_interfaces;
+package com.movielist.view.fragments;
 
 import com.movielist.presenter.model_listeners.Receiver;
 

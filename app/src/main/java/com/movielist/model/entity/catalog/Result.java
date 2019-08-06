@@ -1,10 +1,8 @@
-package com.movielist.model.entity;
+package com.movielist.model.entity.catalog;
 
 import com.google.gson.annotations.SerializedName;
 import com.movielist.model.ResultTypes;
-import com.movielist.model.entity.catalog.MovieResult;
-import com.movielist.model.entity.catalog.PersonResult;
-import com.movielist.model.entity.catalog.TvResult;
+import com.movielist.model.entity.DownloadTypes;
 import com.movielist.model.model_interfaces.ListInformation;
 import com.movielist.model.model_interfaces.Loadable;
 import com.movielist.presenter.model_listeners.UINetworkListener;
@@ -89,7 +87,7 @@ public abstract class Result implements Loadable, Serializable {
                 return new TvResult(language,region);
             }
             case MOVIE: {
-                return new MovieResult(language, region,DownloadTypes.QUERY);
+                return new MovieResult(language, region, DownloadTypes.QUERY);
             }
             case PEOPLE: {
                 return new PersonResult(language, region);

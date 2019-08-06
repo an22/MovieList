@@ -2,57 +2,55 @@ package com.movielist.view.activities;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.movielist.R;
 import com.movielist.database.KeyDbHelper;
-import com.movielist.model.RateDialog;
 import com.movielist.model.entity.Configuration;
+import com.movielist.model.entity.ImagePaths;
 import com.movielist.model.entity.catalog.User;
 import com.movielist.model.entity.moviedetails.Credits;
 import com.movielist.model.entity.moviedetails.Movie;
-import com.movielist.model.entity.ImagePaths;
 import com.movielist.presenter.activity_presenters.MoviePresenter;
-import com.movielist.view.RateListener;
 import com.movielist.view.adapters.ImageAdapter;
 import com.movielist.view.adapters.PersonAdapter;
+import com.movielist.view.fragments.RateDialog;
 import com.movielist.view.view_interfaces.MovieView;
+import com.movielist.view.view_interfaces.RateListener;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MovieActivity extends AppCompatActivity implements MovieView, RateListener {
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
 
     @BindView(R.id.poster)
     ImageView poster;
 
     @BindView(R.id.scroll_view)
-    ScrollView mScrollView;
+    NestedScrollView mScrollView;
 
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
-
-    @BindView(R.id.back)
-    ImageView backIcon;
-
-    @BindView(R.id.menu)
-    ImageView more;
 
     @BindView(R.id.rating)
     TextView rating;
@@ -87,7 +85,6 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
         ButterKnife.bind(this);
-
         Bundle extras = getIntent().getExtras();
 
         if(extras != null){
@@ -96,6 +93,7 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
             mConfiguration = (Configuration)extras.getSerializable(Configuration.TAG);
             int userID = extras.getInt(User.USER);
             mPresenter = new MoviePresenter(String.valueOf(movieID), this, new Movie(), session,userID);
+            getLifecycle().addObserver(mPresenter);
         }
 
         images.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
@@ -113,6 +111,12 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
             }
         }
 
+        setSupportActionBar(mToolbar);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+        mToolbar.inflateMenu(R.menu.movie_menu);
     }
 
     private void showDialog(){
@@ -120,36 +124,12 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
         rateDialog.show(getSupportFragmentManager(),"RateDialog");
     }
 
-    @OnClick(R.id.back)
-    void backClick(){
-        onBackPressed();
-    }
-
-    @OnClick(R.id.menu)
-    void menuClick(View view){
-        PopupMenu popupMenu = new PopupMenu(this,view);
-        popupMenu.getMenuInflater().inflate(R.menu.movie_menu,popupMenu.getMenu());
-
-        popupMenu.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()){
-                case R.id.add_to_fav:{
-                    mPresenter.addToFavourites();
-                    break;
-                }
-                case R.id.add_to_watchlist:{
-                    mPresenter.addToWatchlist();
-                    break;
-                }
-            }
-            return true;
-        });
-        popupMenu.show();
-    }
 
     @OnClick(R.id.floatingButton)
     void rateClick(){
         showDialog();
     }
+
 
     @Override
     public void addRating(String rating) {
@@ -240,6 +220,32 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.movie_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:{
+                onBackPressed();
+                finish();
+                return true;
+            }
+            case R.id.add_to_fav:{
+                mPresenter.addToFavourites();
+                return true;
+            }
+            case R.id.add_to_watchlist:{
+                mPresenter.addToWatchlist();
+                return true;
+            }
+            default: return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void showSuccessfullRating() {
         Snackbar snackbar = Snackbar.make(mScrollView.getRootView(),"SUCCESS",3000);
         snackbar.getView().setBackgroundResource(R.color.colorPrimary);
@@ -261,22 +267,4 @@ public class MovieActivity extends AppCompatActivity implements MovieView, RateL
         outState.putBoolean("Resource", isRated);
         super.onSaveInstanceState(outState);
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:{
-                onBackPressed();
-                return true;
-            }
-            default: return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mPresenter.onDestroy();
-    }
-
 }

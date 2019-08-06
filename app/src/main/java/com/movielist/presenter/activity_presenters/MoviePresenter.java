@@ -7,7 +7,11 @@ import com.movielist.view.view_interfaces.MovieView;
 
 import java.text.DecimalFormat;
 
-public class MoviePresenter {
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.OnLifecycleEvent;
+
+public class MoviePresenter implements LifecycleObserver {
 
     private MovieView mMovieView;
     private MovieModel mMovieModel;
@@ -71,7 +75,7 @@ public class MoviePresenter {
         model.loadMovie(movieID, listener);
     }
 
-    private String formatGenres(){
+    protected String formatGenres(){
         StringBuilder genres = new StringBuilder();
 
         for (Genre genre:mMovieModel.getGenres()) {
@@ -89,15 +93,15 @@ public class MoviePresenter {
         return mMovieModel.getImagePath();
     }
 
-    private String formatRuntime(){
+    protected String formatRuntime(){
        int runtime =  mMovieModel.getRuntime();
        String formatted = " ";
 
        int hours = runtime /60;
-       if(hours > 0) formatted = String.valueOf(hours) + " h. ";
+       if(hours > 0) formatted = hours + " h. ";
 
        int min = (runtime%60);
-       formatted += String.valueOf(min) + " m.";
+       formatted += min + " m.";
 
        return formatted;
     }
@@ -122,6 +126,7 @@ public class MoviePresenter {
         else mMovieModel.rateGuest(rating,session,toolsListener);
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void onDestroy(){
         mMovieView = null;
         mMovieModel = null;

@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.movielist.model.ResultTypes;
 
 public class WatchlistBody {
+
     @SerializedName("media_type")
     private String mType;
 

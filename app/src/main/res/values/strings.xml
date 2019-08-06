@@ -13,4 +13,5 @@
     <string name="save_image">Save image</string>
     <string name="add_to_favourites">Add to favourites</string>
     <string name="add_to_watchlist">Add to watchlist</string>
+    <string name="log_out">Log out</string>
 </resources>

@@ -11,7 +11,6 @@ import com.movielist.model.entity.Configuration;
 import com.movielist.model.entity.DownloadTypes;
 import com.movielist.model.entity.catalog.MovieResult;
 import com.movielist.presenter.model_listeners.UINetworkListener;
-import com.movielist.view.LoadMoreListener;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;

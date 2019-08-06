@@ -15,13 +15,12 @@ import com.movielist.database.KeyDbHelper;
 import com.movielist.model.Error;
 import com.movielist.model.ResultTypes;
 import com.movielist.model.entity.Configuration;
-import com.movielist.model.entity.Result;
+import com.movielist.model.entity.catalog.Result;
 import com.movielist.model.entity.catalog.User;
 import com.movielist.presenter.model_listeners.UINetworkListener;
-import com.movielist.view.LoadMoreListener;
+import com.movielist.view.adapters.LoadMoreListener;
 import com.movielist.view.activities.CatalogActivity;
 import com.movielist.view.adapters.InnerHomeAdapter;
-import com.movielist.view.view_interfaces.ReceiverFragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

@@ -58,7 +58,7 @@ public class FullScreenImageActivity extends AppCompatActivity {
         switch (item.getItemId())
         {
             case R.id.save:
-                ImageView imageView = (ImageView)pager.getChildAt(pager.getCurrentItem());
+                ImageView imageView = pager.findViewWithTag(pager.getCurrentItem());
                 Bitmap imageBitmap = CapturePhotoUtils.drawableToBitmap(imageView.getDrawable());
                 CapturePhotoUtils.insertImage(getContentResolver(),imageBitmap,"image" + pager.getCurrentItem(),null,this);
                 return true;
@@ -67,5 +67,7 @@ public class FullScreenImageActivity extends AppCompatActivity {
                 return true;
             default: return super.onOptionsItemSelected(item);
         }
+
+
     }
 }

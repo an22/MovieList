@@ -15,4 +15,5 @@ public interface CatalogModel {
      void loadConfig(UINetworkListener listener);
      Configuration getConfig();
      void setConfig(Configuration config);
+     void deleteSession();
 }

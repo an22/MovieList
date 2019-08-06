@@ -57,6 +57,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         LoginData loginData = new LoginData(dbHelper);
 
         mPresenter = new LoginPresenter(this, loginData);
+        getLifecycle().addObserver(mPresenter);
 
         clicked = false;
         loaded = false;
@@ -162,11 +163,5 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         CustomTabsIntent intent = builder.build();
         intent.launchUrl(this, Uri.parse(url));
         clicked = false;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mPresenter.onDestroy();
     }
 }

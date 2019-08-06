@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide;
 import com.movielist.R;
 import com.movielist.database.KeyDbHelper;
 import com.movielist.model.entity.Configuration;
-import com.movielist.model.entity.Result;
+import com.movielist.model.entity.catalog.Result;
 import com.movielist.model.entity.catalog.User;
 import com.movielist.model.entity.moviedetails.Movie;
 import com.movielist.presenter.model_listeners.UINetworkListener;

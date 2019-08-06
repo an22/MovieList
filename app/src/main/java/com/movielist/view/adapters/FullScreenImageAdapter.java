@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.ViewTarget;
+import com.movielist.R;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
@@ -27,6 +29,7 @@ public class FullScreenImageAdapter extends PagerAdapter {
         ImageView imageView = new ImageView(mContext);
         imageView.setPadding(0,0,0,0);
         imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        imageView.setTag(position);
         Glide.with(mContext).load(imageURL[0] + imageURL[1] + imageURL[position + 2]).into(imageView);
         container.addView(imageView,0);
         return imageView;
@@ -41,6 +44,7 @@ public class FullScreenImageAdapter extends PagerAdapter {
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
         return view == object;
     }
+
 
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {

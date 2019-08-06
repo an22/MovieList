@@ -11,8 +11,10 @@ import com.movielist.model.Error;
 import com.movielist.model.TmdbConstants;
 import com.movielist.model.entity.Configuration;
 import com.movielist.model.entity.auth.AccessToken;
+import com.movielist.model.entity.auth.GuestSession;
 import com.movielist.model.model_interfaces.CatalogModel;
 import com.movielist.model.network.RetrofitSingleton;
+import com.movielist.model.network.requests.Authorization;
 import com.movielist.model.network.requests.GetImageCfg;
 import com.movielist.model.network.requests.GetUserDetails;
 import com.movielist.presenter.model_listeners.GuestListener;
@@ -51,6 +53,7 @@ public class CatalogData implements CatalogModel {
                 Log.i(TAG,response.toString());
                 if(user != null) {
                     Log.i(User.USER, user.toString());
+                    user.setSession(session);
                     CatalogData.this.user = user;
                     user.setGuest(false);
                     if(loadAccessTokenFromDb(context)) listener.onLoaded();
@@ -58,6 +61,7 @@ public class CatalogData implements CatalogModel {
                     else listener.onError(Error.DATABASE_ERROR);
                 }
                 else if(response.code() == 401){
+                    CatalogData.this.user = new User(session);
                     listener.onGuest();
                 }
             }
@@ -101,6 +105,36 @@ public class CatalogData implements CatalogModel {
     @Override
     public void setConfig(Configuration config) {
         mConfiguration = config;
+    }
+
+    @Override
+    public void deleteSession(){
+        Authorization authorization = RetrofitSingleton.getInstance().getRetrofit().create(Authorization.class);
+       /* if(!user.isGuest()) {
+            authorization.deleteSession("Bearer " + TmdbConstants.keyV4, user.getAccessToken()).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    Log.i(TAG, response.toString());
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+
+                }
+            });
+        }else{*/
+            authorization.deleteSessionGuest(TmdbConstants.keyV3,new GuestSession(user.getSession())).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    Log.i(TAG, response.toString());
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+
+                }
+            });
+        //}
     }
 
     private boolean loadAccessTokenFromDb(Context context){

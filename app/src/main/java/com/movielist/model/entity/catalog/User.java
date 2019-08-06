@@ -32,15 +32,17 @@ public class User implements Serializable {
     private boolean adult;
 
     private AccessToken mAccessToken;
+    private String session;
 
     //Default user is Guest
-    public User(){
+    public User(String sesssion){
         language = "en";
         country = "US";
         name = "Guest";
         id = -1;
         adult = false;
         isGuest = true;
+        this.session = sesssion;
     }
 
 
@@ -69,6 +71,14 @@ public class User implements Serializable {
 
     public int getId() {
         return id;
+    }
+
+    public void setSession(String session) {
+        this.session = session;
+    }
+
+    public String getSession() {
+        return session;
     }
 
     public String getLanguage() {
