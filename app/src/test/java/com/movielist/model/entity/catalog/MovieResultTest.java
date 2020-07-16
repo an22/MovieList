@@ -1,7 +1,7 @@
 package com.movielist.model.entity.catalog;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.*;
 
@@ -9,7 +9,7 @@ public class MovieResultTest {
 
     private MovieResult mResult;
 
-    @Before
+    @BeforeEach
     public void setUp(){
         mResult = new MovieResult("en","us");
     }
@@ -24,7 +24,7 @@ public class MovieResultTest {
         assertEquals(mResult.currentQuery,"not_query");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void canLoadPage() {
         assertEquals(mResult.canLoadPage(),true);
         mResult.currentPage = 2;

@@ -1,0 +1,56 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.appswithlove.loco'
+
+android {
+    compileSdkVersion sdk_compile_version
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        minSdkVersion sdk_min_version
+        targetSdkVersion sdk_compile_version
+        versionCode version_code
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    buildFeatures{
+        dataBinding = true
+    }
+}
+
+Loco {
+    apiKey = 'SmoB_w_aj6tvSAbF4RZVoiXMTBQ5ZHhh'
+    lang = ['ru', 'en', 'uk']
+    defLang = 'uk'
+    resDir = "$projectDir/src/main/res"
+    tags = "core"
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation project(":entity")
+    implementation project(":usecase")
+    rootProject.core.each {
+        add(it.configuration, it.dependency, it.options)
+    }
+}

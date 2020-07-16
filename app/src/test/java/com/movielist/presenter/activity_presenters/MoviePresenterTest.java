@@ -3,14 +3,15 @@ package com.movielist.presenter.activity_presenters;
 import com.movielist.model.entity.moviedetails.Genre;
 import com.movielist.model.entity.moviedetails.Movie;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 public class MoviePresenterTest {
 
     MoviePresenter presenter;
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         Movie model = mock(Movie.class);
         Genre genre = mock(Genre.class);

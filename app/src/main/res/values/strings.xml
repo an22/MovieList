@@ -1,17 +1,13 @@
-<resources>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Loco xml export: Android string resources
+ Project: Movie List
+ Release: Working copy
+ Locale: uk-UA, Ukrainian (Ukraine)
+ Tagged: app
+ Exported by: Michael Antiufieiev
+ Exported at: Thu, 16 Jul 2020 23:18:16 +0300
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">MovieList</string>
-    <string name="loginData">Login as User or just continue as guest</string>
-    <string name="as_guest">CONTINUE AS GUEST</string>
-    <string name="sign_in">Sign In</string>
-    <string name="logo">Logo</string>
-    <string name="home">Home</string>
-    <string name="search">Search</string>
-    <string name="poster">Poster</string>
-    <string name="filter">filter</string>
-    <string name="ret">Return</string>
-    <string name="show_more">Show more</string>
-    <string name="save_image">Save image</string>
-    <string name="add_to_favourites">Add to favourites</string>
-    <string name="add_to_watchlist">Add to watchlist</string>
-    <string name="log_out">Log out</string>
 </resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Loco xml export: Android string resources
+ Project: Movie List
+ Release: Working copy
+ Locale: ru-RU, Russian (Russia)
+ Tagged: app
+ Exported by: Michael Antiufieiev
+ Exported at: Thu, 16 Jul 2020 23:18:16 +0300
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">MovieList</string>
+</resources>
