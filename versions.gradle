@@ -1,6 +1,9 @@
 ext {
-    sdk_compile_version = 29
+    sdk_compile_version = 30
     sdk_min_version = 21
+
+    build_tools_version = "30.0.0"
+    project_jvm_target = "1.8"
 
     versionMajor = 0
     versionMinor = 0

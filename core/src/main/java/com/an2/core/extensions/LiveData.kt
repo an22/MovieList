@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.an2.core.extensions
 
 import androidx.appcompat.app.AppCompatActivity
@@ -42,14 +44,14 @@ inline fun <reified T, LD : LiveData<T>> Fragment.observe(
     liveData: LD,
     crossinline block: (T) -> Unit
 ) {
-    liveData.observe(viewLifecycleOwner, Observer<T> { block(it) })
+    liveData.observe(viewLifecycleOwner, Observer { block(it) })
 }
 
 inline fun <reified T, LD : LiveData<T>> AppCompatActivity.observe(
     liveData: LD,
     crossinline block: (T) -> Unit
 ) {
-    liveData.observe(this, Observer<T> { block(it) })
+    liveData.observe(this, Observer { block(it) })
 }
 
 inline fun <X, Y> MutableLiveData<X>.mutableMap(crossinline transform: (X) -> Y): MutableLiveData<Y> {

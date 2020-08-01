@@ -6,7 +6,7 @@
  Locale: en, English
  Tagged: core
  Exported by: Michael Antiufieiev
- Exported at: Thu, 16 Jul 2020 23:18:02 +0300
+ Exported at: Sat, 01 Aug 2020 22:31:24 +0300
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="error_server_no_internet_connection">There is no internet connection</string>

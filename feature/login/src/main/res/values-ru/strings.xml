@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Loco xml export: Android string resources
+ Project: Movie List
+ Release: Working copy
+ Locale: ru-RU, Russian (Russia)
+ Tagged: login
+ Exported by: Michael Antiufieiev
+ Exported at: Sat, 01 Aug 2020 22:31:25 +0300
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="login_choose_type">Login as User or just continue as guest</string>
+    <string name="login_sign_in"></string>
+    <string name="login_as_guest">Continue as guest</string>
+</resources>

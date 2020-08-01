@@ -1,4 +1,4 @@
-package com.megamarket.shop.core.utils
+package com.an2.core.utils
 
 import androidx.viewpager2.widget.ViewPager2
 

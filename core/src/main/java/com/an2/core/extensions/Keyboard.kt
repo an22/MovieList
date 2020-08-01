@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.an2.core.extensions
 
 import android.app.Activity

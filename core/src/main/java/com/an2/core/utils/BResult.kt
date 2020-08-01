@@ -25,8 +25,7 @@ inline fun <T : Any> BResult<T>.returnIfError(handler: (T: ErrorEntity) -> T): B
     }
 }
 
-//todo: ifSuccess!!
-inline fun <T : Any> BResult<T>.isSuccess(handler: (T) -> Unit): BResult<T> {
+inline fun <T : Any> BResult<T>.ifSuccess(handler: (T) -> Unit): BResult<T> {
     when (this) {
         is BResult.Success -> handler(this.data)
     }

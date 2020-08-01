@@ -19,7 +19,8 @@ import com.google.android.material.snackbar.Snackbar
 
 private const val MESSAGE_DURATION = 2_000
 
-abstract class BaseActivity(@LayoutRes val layoutRes: Int) : AppCompatActivity(layoutRes) {
+abstract class BaseActivity(@LayoutRes protected val layoutRes: Int) :
+    AppCompatActivity(layoutRes) {
 
     private val mainView by lazy { window.decorView }
 

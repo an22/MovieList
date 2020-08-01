@@ -10,3 +10,4 @@ fun Int?.orNegative() = this ?: -1
 
 fun Float?.orNegative() = this ?: -1f
 
+fun Float?.orZero() = this ?: 0f

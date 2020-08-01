@@ -29,6 +29,11 @@ gradle.projectsEvaluated {
         if (project.hasProperty('updateLoco')) {
             preBuild.dependsOn updateLoco
         }
+        if (project.hasProperty('android')) {
+            android.kotlinOptions {
+                jvmTarget = project_jvm_target
+            }
+        }
     }
 }
 

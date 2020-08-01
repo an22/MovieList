@@ -25,14 +25,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-
-    buildFeatures {
-        dataBinding = true
-    }
 }
 
 Loco {
@@ -48,6 +40,7 @@ dependencies {
     rootProject.app.each {
         add(it.configuration, it.dependency, it.options)
     }
-    implementation project(':login')
-    implementation project(':main')
+    implementation project(':core')
+    implementation project(':feature:login')
+    implementation project(':feature:main')
 }

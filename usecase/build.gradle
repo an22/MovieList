@@ -5,12 +5,12 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion sdk_compile_version
-    buildToolsVersion "29.0.3"
+    buildToolsVersion build_tools_version
 
     defaultConfig {
         minSdkVersion sdk_min_version
         targetSdkVersion sdk_compile_version
-        versionCode version_code
+        versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -23,15 +23,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation project(":repository")
+    implementation project(":repo:repository")
     implementation project(":entity")
     rootProject.usecase.each {
         add(it.configuration, it.dependency, it.options)

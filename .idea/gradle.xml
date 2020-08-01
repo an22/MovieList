@@ -16,12 +16,13 @@
             <option value="$PROJECT_DIR$/entity" />
             <option value="$PROJECT_DIR$/feature" />
             <option value="$PROJECT_DIR$/feature/home" />
+            <option value="$PROJECT_DIR$/feature/login" />
+            <option value="$PROJECT_DIR$/feature/main" />
             <option value="$PROJECT_DIR$/feature/search" />
-            <option value="$PROJECT_DIR$/local" />
-            <option value="$PROJECT_DIR$/login" />
-            <option value="$PROJECT_DIR$/main" />
-            <option value="$PROJECT_DIR$/remote" />
-            <option value="$PROJECT_DIR$/repository" />
+            <option value="$PROJECT_DIR$/repo" />
+            <option value="$PROJECT_DIR$/repo/local" />
+            <option value="$PROJECT_DIR$/repo/remote" />
+            <option value="$PROJECT_DIR$/repo/repository" />
             <option value="$PROJECT_DIR$/usecase" />
           </set>
         </option>

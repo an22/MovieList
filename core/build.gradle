@@ -6,12 +6,12 @@ apply plugin: 'com.appswithlove.loco'
 
 android {
     compileSdkVersion sdk_compile_version
-    buildToolsVersion "29.0.3"
+    buildToolsVersion build_tools_version
 
     defaultConfig {
         minSdkVersion sdk_min_version
         targetSdkVersion sdk_compile_version
-        versionCode version_code
+        versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -29,11 +29,7 @@ android {
         }
     }
 
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-
-    buildFeatures{
+    buildFeatures {
         dataBinding = true
     }
 }
