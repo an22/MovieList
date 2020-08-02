@@ -18,13 +18,10 @@ sealed class ErrorEntity {
         }
     }
 
-    object ProductNotFound : ErrorEntity()
-
-    //todo: add some error type
     object NotConnectionError : ErrorEntity() {
         override fun toErrorMessage() = BaseValidator.UNKNOWN_HOST
     }
+    object UnknownError : ErrorEntity()
 
     class NotImplementedError(val throwable: Throwable? = null) : ErrorEntity()
-    object UnknownError : ErrorEntity()
 }

@@ -33,7 +33,8 @@ ext {
 
     def base = [
             kotlin             : "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
-            lifecycle          : "android.arch.lifecycle:extensions:$lifecycle_version",
+            lifecycle          : "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version",
+            lifecycleCompiler  : "androidx.lifecycle:lifecycle-compiler:$lifecycle_version",
             material           : "com.google.android.material:material:$material_version",
             fragment           : "androidx.fragment:fragment-ktx:$fragment_ktx_version",
             design             : "com.android.support:design:$design_version",
@@ -115,10 +116,9 @@ ext {
             [configuration: "implementation", dependency: base.coroutinesAndroid],
             [configuration: "implementation", dependency: base.coroutinesAndroidX],
             [configuration: "implementation", dependency: base.coroutinesViewModel],
-
-            [configuration: "implementation", dependency: room.runtime],
-            [configuration: "implementation", dependency: room.ktx],
-            [configuration: "kapt", dependency: room.compiler],
+            [configuration: "implementation", dependency: base.navigationFragment],
+            [configuration: "implementation", dependency: base.navigationUI],
+            [configuration: "kapt", dependency: base.lifecycleCompiler],
 
             [configuration: "implementation", dependency: retrofit.main],
             [configuration: "implementation", dependency: retrofit.adapter],

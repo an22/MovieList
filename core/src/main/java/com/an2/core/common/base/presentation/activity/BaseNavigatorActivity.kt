@@ -2,15 +2,17 @@ package com.an2.core.common.base.presentation.activity
 
 import android.os.Bundle
 import androidx.annotation.LayoutRes
+import androidx.databinding.ViewDataBinding
 import com.an2.core.common.base.navigation.BaseNavigator
 import com.an2.core.common.base.presentation.viewmodel.BaseViewModelFactory
 import javax.inject.Inject
 
-abstract class BaseNavigatorActivity<Navigator : BaseNavigator>(
+abstract class BaseNavigatorActivity<Navigator : BaseNavigator, B : ViewDataBinding>(
     @LayoutRes layoutRes: Int
-) : BaseActivity(layoutRes) {
+) : BaseActivity<B>(layoutRes) {
 
     abstract var navigator: Navigator
+
     @Inject
     lateinit var viewModeFactory: BaseViewModelFactory
 

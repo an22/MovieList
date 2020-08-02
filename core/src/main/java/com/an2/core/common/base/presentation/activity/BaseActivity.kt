@@ -8,6 +8,9 @@ import androidx.annotation.ColorRes
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
+import androidx.navigation.findNavController
 import com.an2.core.common.base.presentation.viewmodel.AlertMessageEvent
 import com.an2.core.common.base.presentation.viewmodel.ErrorMessageEvent
 import com.an2.core.common.base.presentation.viewmodel.Event
@@ -19,10 +22,19 @@ import com.google.android.material.snackbar.Snackbar
 
 private const val MESSAGE_DURATION = 2_000
 
-abstract class BaseActivity(@LayoutRes protected val layoutRes: Int) :
-    AppCompatActivity(layoutRes) {
+abstract class BaseActivity<B : ViewDataBinding>(
+    @LayoutRes protected val layoutRes: Int
+) : AppCompatActivity() {
 
+    private var _binding: B? = null
     private val mainView by lazy { window.decorView }
+
+    protected val navController by lazy { findNavController(navHostId) }
+    protected val binding: B
+        get() = requireNotNull(_binding)
+
+    @get:IdRes
+    protected abstract val navHostId: Int
 
     @IdRes
     protected open val messagesContainer: Int = android.R.id.content
@@ -30,6 +42,18 @@ abstract class BaseActivity(@LayoutRes protected val layoutRes: Int) :
     override fun onCreate(savedInstanceState: Bundle?) {
         injectActivity()
         super.onCreate(savedInstanceState)
+        initBinding()
+    }
+
+    protected open fun B.setupBinding() = Unit
+
+    private fun initBinding() {
+        _binding = DataBindingUtil.setContentView(this, layoutRes)
+    }
+
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 
     open fun injectActivity() {

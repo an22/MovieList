@@ -34,14 +34,6 @@ android {
     }
 }
 
-Loco {
-    apiKey = 'SmoB_w_aj6tvSAbF4RZVoiXMTBQ5ZHhh'
-    lang = ['ru', 'en', 'uk']
-    defLang = 'uk'
-    resDir = "$projectDir/src/main/res"
-    tags = "core"
-}
-
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation project(":entity")

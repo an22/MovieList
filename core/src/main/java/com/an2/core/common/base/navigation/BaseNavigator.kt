@@ -10,12 +10,12 @@ import java.lang.ref.WeakReference
 
 abstract class BaseNavigator {
 
-    private var activityWr: WeakReference<BaseActivity>? = null
+    private var activityWr: WeakReference<BaseActivity<*>>? = null
 
-    protected val activity: BaseActivity? get() = activityWr?.get()
+    protected val activity: BaseActivity<*>? get() = activityWr?.get()
     protected val fManager: FragmentManager? get() = activity?.supportFragmentManager
 
-    fun attachActivity(activity: BaseActivity) {
+    fun attachActivity(activity: BaseActivity<*>) {
         activityWr = WeakReference(activity)
     }
 

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import androidx.annotation.CallSuper
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
@@ -27,7 +26,7 @@ private const val MESSAGE_DURATION = 2_000
 
 @Suppress("MemberVisibilityCanBePrivate")
 abstract class BaseFragment<B : ViewDataBinding>(
-        @LayoutRes protected val layoutResId: Int
+    @LayoutRes protected val layoutResId: Int
 ) : Fragment() {
 
     private val job: Job = SupervisorJob()
@@ -39,14 +38,15 @@ abstract class BaseFragment<B : ViewDataBinding>(
         get() = requireCoreComponent()
 
     protected var binding: B by AutoClearedValue()
+        private set
 
     @IdRes
     protected open val messagesContainer: Int = android.R.id.content
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
         binding = DataBindingUtil.inflate(inflater, layoutResId, container, false)
@@ -77,54 +77,46 @@ abstract class BaseFragment<B : ViewDataBinding>(
     protected open fun onEvent(event: Event) {
         when (event) {
             is MessageEvent -> showMessage(
-                    messageText = event.getMessageString(requireContext()),
-                    containerResId = messagesContainer
+                messageText = event.getMessageString(requireContext()),
+                containerResId = messagesContainer
             )
             is ErrorMessageEvent -> showError(
-                    messageText = event.getMessageString(requireContext()),
-                    containerResId = messagesContainer
+                messageText = event.getMessageString(requireContext()),
+                containerResId = messagesContainer
             )
             is AlertMessageEvent -> showAlertMessage(
-                    event.getMessageString(requireContext()),
-                    event.onDismissListener
+                event.getMessageString(requireContext()),
+                event.onDismissListener
             )
         }
     }
 
     fun showAlertMessage(messageText: String, onDismissListener: () -> Unit = {}) {
         MaterialAlertDialogBuilder(requireContext())
-                .setMessage(messageText)
-                .setPositiveButton(android.R.string.ok) { d, _ -> d.dismiss(); onDismissListener.invoke() }
-                .setOnDismissListener { onDismissListener.invoke() }
-                .show()
+            .setMessage(messageText)
+            .setPositiveButton(android.R.string.ok) { d, _ -> d.dismiss(); onDismissListener.invoke() }
+            .setOnDismissListener { onDismissListener.invoke() }
+            .show()
     }
 
     fun showMessage(messageText: String, containerResId: Int) {
-        (appCompatActivity as BaseActivity).showMessage(
-                messageText,
-                null,
-                null,
-                containerResId,
-                MESSAGE_DURATION
+        (appCompatActivity as BaseActivity<*>).showMessage(
+            messageText,
+            null,
+            null,
+            containerResId,
+            MESSAGE_DURATION
         )
     }
 
     fun showError(messageText: String, containerResId: Int) {
-        (appCompatActivity as BaseActivity).showError(
-                messageText,
-                null,
-                null,
-                containerResId,
-                MESSAGE_DURATION,
-                {}
+        (appCompatActivity as BaseActivity<*>).showError(
+            messageText,
+            null,
+            null,
+            containerResId,
+            MESSAGE_DURATION,
+            {}
         )
-    }
-
-    protected fun enableResizingWhenKeyboardShow() {
-        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-    }
-
-    protected fun disableResizingWhenKeyboardShow() {
-        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
     }
 }

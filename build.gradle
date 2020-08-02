@@ -26,12 +26,38 @@ allprojects {
 
 gradle.projectsEvaluated {
     subprojects {
-        if (project.hasProperty('updateLoco')) {
-            preBuild.dependsOn updateLoco
+        setupLoco(project)
+        applyAndroidConfig(project)
+        updateLocoFiles(project)
+    }
+}
+
+def updateLocoFiles(Project project) {
+    if (plugins.hasPlugin('com.appswithlove.loco')) {
+        project.preBuild.dependsOn updateLoco
+    }
+}
+
+def setupLoco(Project project) {
+    if (project.hasProperty('Loco')) {
+        project.Loco {
+            apiKey = 'SmoB_w_aj6tvSAbF4RZVoiXMTBQ5ZHhh'
+            lang = ['ru', 'en', 'uk']
+            defLang = 'uk'
+            resDir = "$project.projectDir/src/main/res"
+            tags = "$project.name"
         }
-        if (project.hasProperty('android')) {
-            android.kotlinOptions {
-                jvmTarget = project_jvm_target
+    }
+}
+
+def applyAndroidConfig(Project project) {
+    if (project.hasProperty('android')) {
+        project.android.kotlinOptions {
+            jvmTarget = project_jvm_target
+        }
+        project.android.defaultConfig.javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.incremental": "true"]
             }
         }
     }

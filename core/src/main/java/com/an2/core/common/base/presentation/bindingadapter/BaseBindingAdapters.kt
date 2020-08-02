@@ -10,24 +10,24 @@ import com.bumptech.glide.Glide
 
 
 @BindingAdapter("linkClick")
-fun moveToLinkOnClick(view: View, link: String?) {
+fun View.moveToLinkOnClick(link: String?) {
     link ?: return
-    view.setOnSingleClickListener {
+    this.setOnSingleClickListener {
         val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
         it.context.startActivity(browserIntent)
     }
 }
 
 @BindingAdapter("imageUrl")
-fun imageUrl(imageView: ImageView, link: String) {
-    Glide.with(imageView)
+fun ImageView.imageUrl(link: String) {
+    Glide.with(this)
         .load(link)
-        .into(imageView)
+        .into(this)
 }
 
 @BindingAdapter("visibleOrGone")
-fun visibleOrGone(view: View, isVisible: Boolean) {
-    view.visibility = if (isVisible) {
+fun View.visibleOrGone(isVisible: Boolean) {
+    visibility = if (isVisible) {
         View.VISIBLE
     } else View.GONE
 }
