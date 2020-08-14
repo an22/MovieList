@@ -6,10 +6,10 @@
 
     <fragment
         android:id="@+id/fragment_home"
-        android:name="com.an2.home.presentation.HomeFragment" />
+        android:name="com.movielist.home.presentation.HomeFragment" />
 
     <fragment
         android:id="@+id/fragment_search"
-        android:name="com.an2.feature.search.presentation.SearchFragment" />
+        android:name="com.movielist.feature.search.presentation.SearchFragment" />
 
 </navigation>
