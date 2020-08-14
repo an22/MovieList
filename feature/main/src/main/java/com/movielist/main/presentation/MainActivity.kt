@@ -2,7 +2,7 @@ package com.movielist.main.presentation
 
 import android.view.MenuItem
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.movielist.core.common.base.presentation.activity.BaseActivity
+import com.movielist.core.presentation.activity.BaseActivity
 import com.movielist.main.R
 import com.movielist.main.databinding.ActivityMainBinding
 

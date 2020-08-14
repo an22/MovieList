@@ -1,7 +1,7 @@
 package com.movielist.home.presentation
 
 import android.os.Bundle
-import com.movielist.core.common.base.presentation.fragment.ViewModelFragment
+import com.movielist.core.presentation.fragment.ViewModelFragment
 import com.movielist.home.R
 import com.movielist.home.databinding.FragmentHomeBinding
 import com.movielist.home.di.DaggerHomeComponent

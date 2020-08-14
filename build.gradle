@@ -12,11 +12,14 @@ buildscript {
         classpath 'com.android.tools.build:gradle:4.0.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.appswithlove.loco:loco:$localize_version"
+        classpath "com.netflix.nebula:gradle-lint-plugin:$netflix_gradle_lint_version"
     }
 }
 
 allprojects {
     apply from: "${rootDir}/versions.gradle"
+    apply plugin: 'nebula.lint'
+    gradleLint.rules += 'unused-dependency'
     repositories {
         google()
         jcenter()
@@ -59,6 +62,9 @@ def applyAndroidConfig(Project project) {
             annotationProcessorOptions {
                 arguments = ["room.incremental": "true"]
             }
+        }
+        if(plugins.hasPlugin('kotlin-kapt')){
+            kapt.correctErrorTypes true
         }
     }
 }

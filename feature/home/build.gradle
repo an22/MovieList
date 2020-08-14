@@ -31,7 +31,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation project(':core')
+    implementation project(':core:core_presentation')
+    implementation project(':core:core_di')
     rootProject.home.each {
         add(it.configuration, it.dependency, it.options)
     }

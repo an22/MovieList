@@ -10,6 +10,7 @@ ext {
     versionPatch = 0
     version_code = 1
 
+    netflix_gradle_lint_version = '16.9.1'
     kotlin_version = '1.3.72'
     androidx_version = '1.3.0'
     appcompat_version = '1.1.0'
@@ -102,6 +103,50 @@ ext {
             [configuration: "kapt", dependency: dagger.compiler],
             [configuration: "implementation", dependency: dagger.android],
             [configuration: "kapt", dependency: dagger.androidCompiler]
+    ]
+
+    core_di = [
+            [configuration: "implementation", dependency: base.kotlin],
+            [configuration: "implementation", dependency: base.coroutinesViewModel],
+
+            [configuration: "implementation", dependency: dagger.main],
+            [configuration: "kapt", dependency: dagger.compiler],
+            [configuration: "implementation", dependency: dagger.android],
+            [configuration: "kapt", dependency: dagger.androidCompiler],
+
+            [configuration: "testImplementation", dependency: tests.core],
+            [configuration: "testImplementation", dependency: tests.coreTesting],
+            [configuration: "testImplementation", dependency: tests.jUnitRule],
+            [configuration: "testImplementation", dependency: tests.jUnitRunner],
+            [configuration: "testImplementation", dependency: tests.junitExt],
+            [configuration: "testImplementation", dependency: tests.junit],
+            [configuration: "testImplementation", dependency: tests.mokito],
+            [configuration: "testImplementation", dependency: tests.coroutines],
+    ]
+
+    core_info = [
+            [configuration: "implementation", dependency: base.kotlin],
+            [configuration: "implementation", dependency: base.coroutinesCore],
+
+            [configuration: "implementation", dependency: retrofit.main],
+            [configuration: "implementation", dependency: retrofit.adapter],
+            [configuration: "implementation", dependency: retrofit.gson],
+            [configuration: "implementation", dependency: retrofit.scalars],
+            [configuration: "implementation", dependency: retrofit.coroutines],
+
+            [configuration: "implementation", dependency: dagger.main],
+            [configuration: "kapt", dependency: dagger.compiler],
+            [configuration: "implementation", dependency: dagger.android],
+            [configuration: "kapt", dependency: dagger.androidCompiler],
+
+            [configuration: "testImplementation", dependency: tests.core],
+            [configuration: "testImplementation", dependency: tests.coreTesting],
+            [configuration: "testImplementation", dependency: tests.jUnitRule],
+            [configuration: "testImplementation", dependency: tests.jUnitRunner],
+            [configuration: "testImplementation", dependency: tests.junitExt],
+            [configuration: "testImplementation", dependency: tests.junit],
+            [configuration: "testImplementation", dependency: tests.mokito],
+            [configuration: "testImplementation", dependency: tests.coroutines],
     ]
 
     core = [

@@ -1,7 +1,7 @@
 package com.movielist.feature.search.presentation
 
 import android.os.Bundle
-import com.movielist.core.common.base.presentation.fragment.BaseFragment
+import com.movielist.core.presentation.fragment.BaseFragment
 import com.movielist.feature.search.R
 import com.movielist.feature.search.databinding.FragmentSearchBinding
 

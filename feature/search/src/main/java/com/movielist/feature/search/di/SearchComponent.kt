@@ -1,7 +1,7 @@
 package com.movielist.feature.search.di
 
-import com.movielist.core.common.base.di.CoreComponent
-import com.movielist.core.common.base.di.scope.FragmentScope
+import com.movielist.core.di.CoreComponent
+import com.movielist.core.di.scope.FragmentScope
 import dagger.Component
 
 @Component(

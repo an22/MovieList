@@ -1,7 +1,7 @@
 package com.movielist.login.di
 
-import com.movielist.core.common.base.di.CoreComponent
-import com.movielist.core.common.base.di.scope.ActivityScope
+import com.movielist.core.di.CoreComponent
+import com.movielist.core.di.scope.ActivityScope
 import com.movielist.login.presentation.LoginActivity
 import dagger.Component
 
